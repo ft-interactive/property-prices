@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import axios from 'axios';
 
 ;(function(){
     const pd = getRecentPropertiesByLocation(window.propertyData);
@@ -11,16 +12,43 @@ import * as d3 from 'd3';
       e.preventDefault();
       output.innerHTML = '';
       var amount = document.getElementById('amount').value;
+      var currency = 'GBP';
 
-      if(amount !== "") getArea(amount);
+      if(amount !== "" && currency !== "") convertAmount(amount, currency);
     });
 
-    function getArea(value) {
+    function convertAmount(value, currency) {
       for(var i in pd) {
-        var result = document.createElement("p");
-        result.textContent = value + ' ' + pd[i].currency + ' buys ' + Math.floor(100*parseInt(value)/parseInt(pd[i].value))/100 + ' sqmt in ' + pd[i].city;
-        output.appendChild(result);
+        if(pd[i].currency !== currency) convertValue(currency, pd[i], value);
+        else {
+          pd[i].convertedValue = value;
+          getArea(pd[i],value, currency)
+        };
       }
+    }
+
+    function getArea(item, value, currency) {
+        var toLocalCurrency = '(' + item.convertedValue + item.currency +')';
+        var userCurrency = value + ' ' + currency;
+        var propertySize = Math.floor(100*item.convertedValue/item.value)/100 + ' sqmt';
+
+        var result = document.createElement("p");
+        result.textContent = userCurrency +' ' + toLocalCurrency + ' buys ' + propertySize + ' in ' + item.city;
+        output.appendChild(result);
+    }
+
+    function convertValue(fromCurrency, item, value) {
+      var endpoint = 'http://markets.ft.com/research/webservices/securities/v1/quotes?symbols='+ fromCurrency + item.currency+'&source=54321';
+
+      axios.get(endpoint)
+        .then(function (response) {
+          item.convertedValue = response.data.data.items[0].quote.closePrice*value;
+          getArea(item, value, fromCurrency);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
     }
 
     function getRecentPropertiesByLocation(array) {

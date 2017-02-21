@@ -8,7 +8,7 @@ export default async () => {
   const flags = await getFlags();
   const onwardJourney = await getOnwardJourney();
   const endpoint = 'http://bertha.ig.ft.com/view/publish/gss/10rzZIkNjPuU4WomzTMIjfb4nW5WlI1VCxjgc9lfrGow/data';
-  
+
   let propertyData;
 
   try {
@@ -17,8 +17,6 @@ export default async () => {
   } catch (e) {
     console.log('Error getting content from Bertha');
   }
-
-  console.log(propertyData);
 
   return {
     ...d,

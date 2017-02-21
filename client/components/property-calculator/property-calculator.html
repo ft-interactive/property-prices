@@ -1,0 +1,16 @@
+<div id="testSVG"></div>
+<div>Hello world, this is a component</div>
+<!--<div>
+	{% for property in propertyData %}
+		{{property.city}} : {{property.value}}
+  {% endfor %}
+</div>-->
+
+<form id="propertyCalculator">
+	<input type="text" name="amount" id="amount" placeholder="Enter a value" />
+	<input type="submit" value="Go!" />
+</form>
+
+<script>
+	window.propertyData = {{ propertyData | dump | safe }};
+</script>

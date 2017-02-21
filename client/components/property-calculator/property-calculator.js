@@ -18,7 +18,7 @@ import * as d3 from 'd3';
     function getArea(value) {
       for(var i in pd) {
         var result = document.createElement("p");
-        result.textContent = value + ' ' + pd[i].currency + ' buys ' + Math.floor(parseInt(value)/parseInt(pd[i].value)) + ' sqmt in ' + pd[i].city;
+        result.textContent = value + ' ' + pd[i].currency + ' buys ' + Math.floor(100*parseInt(value)/parseInt(pd[i].value))/100 + ' sqmt in ' + pd[i].city;
         output.appendChild(result);
       }
     }
@@ -41,12 +41,12 @@ import * as d3 from 'd3';
           return new Date(b.date) - new Date(a.date);
         }
         else {
-            var nameA=a.city.toLowerCase(), nameB=b.city.toLowerCase()
-            if (nameA < nameB) //sort string ascending
-              return -1 
-            if (nameA > nameB)
-              return 1
-            return 0;
+          var nameA=a.city.toLowerCase(), nameB=b.city.toLowerCase()
+          if (nameA < nameB)
+            return -1 
+          if (nameA > nameB)
+            return 1
+          return 0;
         }
       });
 

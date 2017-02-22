@@ -28,9 +28,9 @@ export default () => ({ // eslint-disable-line
   },
 
   mainImage: {
-    title: '',
-    description: '',
-    url: '',
+    title: 'FT PRoperty calculator',
+    description: 'A property calculator',
+    url: 'https://az592774.vo.msecnd.net/pgl-release/Images/ArticleImages/14/14710.jpg',
     width: 2048, // ensure correct width
     height: 1152, // ensure correct height
   },

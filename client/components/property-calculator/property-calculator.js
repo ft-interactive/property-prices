@@ -12,7 +12,7 @@ import axios from 'axios';
       e.preventDefault();
       output.innerHTML = '';
       var amount = document.getElementById('amount').value;
-      var currency = 'GBP';
+      var currency = document.getElementById('currency').value;
 
       if(amount !== "" && currency !== "") convertAmount(amount, currency);
     });

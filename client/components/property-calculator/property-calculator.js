@@ -6,7 +6,6 @@ import axios from 'axios';
 
     var userInput = document.getElementById('propertyCalculator');
     var output = document.getElementById('output');
-    // var svg = d3.select("#testSVG").append('svg');
 
     userInput.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -28,7 +27,7 @@ import axios from 'axios';
     }
 
     function getArea(item, value, currency) {
-        var toLocalCurrency = '(' + item.convertedValue + item.currency +')';
+        var toLocalCurrency = '(' + Math.round(item.convertedValue) + ' ' + item.currency +')';
         var userCurrency = value + ' ' + currency;
         var propertySize = Math.floor(100*item.convertedValue/item.value)/100 + ' sqmt';
 

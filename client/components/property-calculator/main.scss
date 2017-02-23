@@ -1,0 +1,112 @@
+.hidden {
+	display: none;
+}
+
+#propertyCalculator {
+	.icon {
+	  width: 37px;
+	  height: 37px;
+	  display: inline-block;
+	  vertical-align: middle;
+	  margin-right: 10px;
+	}
+
+
+	fieldset {
+		border:none;
+		padding: 20px;
+
+		&.currency-container {
+			background-color: #f7e9d9;
+		}
+
+		label {
+			text-align: center;
+			display: block;
+			width: 100%;
+			margin: 0 0 20px;
+		}
+	}
+
+	#currency {
+		.currency-button {
+		    display: inline-block;
+		   	width: 180px;
+			margin: 0 8px;
+		    -webkit-box-sizing: border-box;
+		    box-sizing: border-box;
+		    vertical-align: middle;
+		    border-style: solid;
+		    text-align: left;
+		    text-decoration: none;
+		    font-family: MetricWeb,sans-serif;
+		    font-weight: 400;
+		    border-radius: 0;
+		    cursor: pointer;
+		    -webkit-transition: .3s background-color ease-out,.15s color ease-out,.15s border-color ease-out;
+		    transition: .3s background-color ease-out,.15s color ease-out,.15s border-color ease-out;
+		    -webkit-user-select: none;
+		    -moz-user-select: none;
+		    -ms-user-select: none;
+		    user-select: none;
+		    background-clip: border-box;
+		    -webkit-font-smoothing: antialiased;
+		    -moz-osx-font-smoothing: grayscale;
+		    -moz-appearance: none;
+		    -webkit-appearance: none;
+		    padding: 5px 8px 5px 8px;
+		    font-size: 18px;
+		    line-height: 1;
+		    border: 1px solid rgba(38,116,122,.4);
+		    color: #17484C;
+		    background-color: #fff1e0;
+
+		    &.selected {
+		    	background-color: rgba(43,187,191,.4);
+		    	-webkit-transition: .3s background-color ease-in;
+		    	transition: .3s background-color ease-in;
+		    }
+
+		    &:not(.selected):hover {
+		    	background-color: rgba(43,187,191,.08);
+		    	-webkit-transition: .3s background-color ease-in;
+		    	transition: .3s background-color ease-in;
+		    }
+		}
+	}
+
+	.separator {
+		line-height: 0.5;
+  		text-align: center;
+  		display: inline-block;
+  		margin: 0 36px;
+
+		span {
+			position: relative;
+			display: inline-block;
+			margin: 0;
+			font-weight: 200;
+			vertical-align: middle;
+			font-size: 18px;
+			
+			&:before, &:after {
+			  content: "";
+			  position: absolute;
+			  height: 2px;
+			  border-bottom: 1px solid #333;
+			  top: 9px;
+			  width: 16px;
+			}
+
+			&:before {
+			  right: 100%;
+			  margin-right: 2px;
+			}
+			
+			&:after {
+			  left: 100%;
+			  margin-left: 2px;
+			}
+		}
+	}
+}

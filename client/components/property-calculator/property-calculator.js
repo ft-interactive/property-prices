@@ -1,5 +1,7 @@
 import * as d3 from 'd3';
 import axios from 'axios';
+import './d3UtilSlider';
+import './DOMElements';
 
 ;(function(){
     const pd = getRecentPropertiesByLocation(window.propertyData);
@@ -9,9 +11,10 @@ import axios from 'axios';
 
     userInput.addEventListener('submit', (e) => {
       e.preventDefault();
+      console.log('submit!');
       output.innerHTML = '';
-      var amount = document.getElementById('amount').value;
-      var currency = document.getElementById('currency').value;
+      var amount = document.getElementById('amountInput').value;
+      var currency = document.getElementById('currencyInput').value;
 
       if(amount !== "" && currency !== "") convertAmount(amount, currency);
     });

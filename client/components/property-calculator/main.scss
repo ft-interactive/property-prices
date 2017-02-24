@@ -1,4 +1,4 @@
-.hidden {
+.hidden, .visually-hidden {
 	display: none;
 }
 
@@ -29,6 +29,8 @@
 	}
 
 	#currency {
+		display: table;
+		margin: 0 auto;
 		.currency-button {
 		    display: inline-block;
 		   	width: 180px;
@@ -61,6 +63,12 @@
 		    color: #17484C;
 		    background-color: #fff1e0;
 
+		    &.currency-input {
+		    	min-height: 48px;
+		    	border-color: grey;
+		    	width: 300px;
+		    }
+
 		    &.selected {
 		    	background-color: rgba(43,187,191,.4);
 		    	-webkit-transition: .3s background-color ease-in;
@@ -72,6 +80,30 @@
 		    	-webkit-transition: .3s background-color ease-in;
 		    	transition: .3s background-color ease-in;
 		    }
+		}
+
+		div.awesomplete {
+			display: inline-block;
+			position: relative;
+
+			>ul {
+				position: absolute;
+			    background: #fff1e0;
+			    width: calc(100% - 38px);
+			    margin: 0 8px;
+			    list-style-type: none;
+			    line-height: 2;
+			    padding: 10px;
+			    border: 1px solid rgba(38,116,122,.4);
+			    border-top: none;
+
+			    li {
+			    	&:hover {
+			    		background-color: rgba(43,187,191,.08);
+			    		cursor: pointer;
+			    	}
+			    }
+			}
 		}
 	}
 

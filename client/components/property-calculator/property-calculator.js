@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 import axios from 'axios';
-import './d3UtilSlider';
+import * as slider from './sliderUtil';
 import './DOMElements';
 
 ;(function(){
@@ -8,6 +8,8 @@ import './DOMElements';
 
     var userInput = document.getElementById('propertyCalculator');
     var output = document.getElementById('output');
+    
+    slider.initSlider('.property-value-slider');
 
     userInput.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -44,7 +46,7 @@ import './DOMElements';
 
       axios.get(endpoint)
         .then(function (response) {
-          item.convertedValue = response.data.data.items[0].quote.closePrice*value;
+          item.convertedValue = response.data.data.items[0].quote.lastPrice*value;
           getArea(item, value, fromCurrency);
         })
         .catch(function (error) {

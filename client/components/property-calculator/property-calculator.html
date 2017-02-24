@@ -102,8 +102,13 @@
 
 		<fieldset>
 			<label class="o-typography-subhead--standard">How much money do you have to spend?</label>
-			<div class="property-slider"></div>
-			<input type="text" name="amount" id="amountInput" value="1000000" />
+			<div class="property-value-slider">
+				<input class="slider-in" id="my-slider-input" type="range" min="0.5" max="10" value="0" step=".5">
+				<output class="slider-out" for="my-slider-input" style=""></output>
+				<span class="slider-range range-min"></span>
+				<span class="slider-range range-max"></span>
+			</div>
+			<input type="hidden" name="amount" id="amountInput" value="1000000" />
 		</fieldset>
 		<input type="submit" value="Go!" />
 	</form>

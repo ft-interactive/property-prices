@@ -53,7 +53,8 @@ function translateRange(){
 
 function updateRangeToNearest500K(exchangeRate) {
 	var newMin = Math.round(exchangeRate)*.5;
-	var newMax = Math.round(exchangeRate)*10;
+	var newMax = Math.round(10*exchangeRate);
+	
 	slider.setAttribute("min", newMin);
 	slider.setAttribute("max", newMax);
 
@@ -73,10 +74,8 @@ function translateValue(value) {
 	var amount = value*1000000;
 	var readableAmount;
 
-	//TODO: round readable, check with JPY
-
 	if(amount>=1000000000) {
-		readableAmount = amount/1000000000 + 'b';
+		readableAmount = (amount/1000000000).toFixed(1) + 'b';
 	}
 	else if(amount >=1000000 && amount < 1000000000) {
 		readableAmount = amount/1000000 + 'm';

@@ -91,6 +91,7 @@
   },
   "dependencies": {
     "awesomplete": "^1.1.1",
+    "currency-symbol-map": "^3.1.0",
     "d3": "^4.6.0"
   }
 }

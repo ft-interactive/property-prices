@@ -1,6 +1,5 @@
 import * as d3 from 'd3';
 import axios from 'axios';
-import * as slider from './sliderUtil';
 import './DOMElements';
 
 ;(function(){
@@ -8,8 +7,6 @@ import './DOMElements';
 
     var userInput = document.getElementById('propertyCalculator');
     var output = document.getElementById('output');
-    
-    slider.initSlider('.property-value-slider');
 
     userInput.addEventListener('submit', (e) => {
       e.preventDefault();

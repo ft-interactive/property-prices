@@ -1,4 +1,5 @@
 import 'awesomplete';
+import * as slider from './sliderUtil';
 
 ;(function(){
 	var buttons = document.querySelectorAll('.currency-button:not(.currency-input)');
@@ -11,6 +12,8 @@ import 'awesomplete';
 			resetCurrencySelection(button);
 			currency.value = button.dataset.currency;
 			e.currentTarget.classList.add('selected');
+			completeInput.value = null;
+			slider.updateSlider(currency.value);
 		});
 	});
 
@@ -18,13 +21,17 @@ import 'awesomplete';
 		resetCurrencySelection(null);
 		e.currentTarget.classList.add('selected');
 		currency.value= completeInput.value;
+		slider.updateSlider(currency.value);
 	});
 
 	function resetCurrencySelection(target) {
 		buttons.forEach(function(button){
 			if(button !== target) button.classList.remove('selected');
 		});
-
 		completeInput.classList.remove('selected');
 	}
+
+	slider.initSlider();
+	var trigger = document.querySelector('.currency-button[data-currency="GBP"]');
+	trigger.click();
 }());

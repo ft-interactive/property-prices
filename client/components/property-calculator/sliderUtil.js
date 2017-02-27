@@ -20,6 +20,10 @@ export function initSlider(){
 	sliderMin.textContent = translateValue(slider.getAttribute("min"));
 	sliderMax.textContent = translateValue(slider.getAttribute("max"));
 
+	window.addEventListener('resize', function(){
+		setOutput();
+	});
+
 	setOutput();
 }
 

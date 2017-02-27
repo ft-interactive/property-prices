@@ -14,17 +14,40 @@
 
 	fieldset {
 		border:none;
-		padding: 20px;
-
-		&.currency-container {
-			background-color: #f7e9d9;
-		}
+		padding: 20px 10px;
 
 		label {
-			text-align: center;
+			text-align: left;
 			display: block;
 			width: 100%;
-			margin: 0 0 20px;
+			font-size: 18px;
+			margin: 0 0 5px;
+			font-weight: 500;
+		}
+
+		@include smallBreakpoint {
+			label {
+				font-size: 22px;
+			}
+		}
+
+		@include mediumBreakpoint {
+			&.currency-container {
+				background-color: #f7e9d9;
+			}
+
+			label {
+				margin: 0 0 20px;
+				font-size: 24px;
+			}
+		}
+
+		@include largeBreakpoint {
+			padding: 20px 0;
+
+			label {
+				text-align: center;
+			}
 		}
 	}
 
@@ -33,8 +56,8 @@
 		margin: 0 auto;
 		.currency-button {
 		    display: inline-block;
-		   	width: 180px;
-			margin: 0 8px;
+		   	width: 100%;
+		   	margin: 5px 0;
 		    -webkit-box-sizing: border-box;
 		    box-sizing: border-box;
 		    vertical-align: middle;
@@ -66,7 +89,7 @@
 		    &.currency-input {
 		    	min-height: 48px;
 		    	border-color: #cec6b9;
-		    	width: 300px;
+		    	width: 100%;
 
 		    	&::-webkit-input-placeholder { /* Chrome/Opera/Safari */
 				  color: #74736c;
@@ -93,17 +116,30 @@
 		    	-webkit-transition: .3s background-color ease-in;
 		    	transition: .3s background-color ease-in;
 		    }
+
+		    @include mediumBreakpoint {
+		    	width: 225px;
+				margin: 0 10px;
+		    }
+
+		    @include largeBreakpoint {
+		    	width: 180px;
+				margin: 0 4px;
+
+		    	&.currency-input {
+					width: 300px;
+				}
+		    }
 		}
 
 		div.awesomplete {
-			display: inline-block;
 			position: relative;
 
 			>ul {
 				position: absolute;
 			    background: #fff1e0;
-			    width: calc(100% - 18px);
-			    margin: 0 8px;
+			    width: 100%;
+			    margin: 0;
 			    list-style-type: none;
 			    line-height: 2;
 			    padding: 10px 0;
@@ -111,7 +147,7 @@
 			    border-top: none;
 			    z-index: 1;
 			    font-family: MetricWeb,sans-serif;
-			    font-size: 18px;
+			    font-size: 16px;
 
 			    li {
 			    	padding: 0 10px;
@@ -133,7 +169,28 @@
 			    border-width: 5px 5px 3px;
 			    position: absolute;
 				right: 30px;
-				top: 23px;
+				top: 25px;
+			}
+
+			@include mediumBreakpoint {
+				width: 350px;
+				margin: 10px auto 0;
+
+				>ul {
+					font-size: 18px;
+					width: calc(100% - 2px);
+					margin: 0 10px;
+				}
+			}
+
+			@include largeBreakpoint {
+				width: auto;
+				display: inline-block;
+
+				> ul {
+					width: calc(100% - 9px);
+					margin: 0 3px;
+				}
 			}
 		}
 	}
@@ -141,8 +198,8 @@
 	.separator {
 		line-height: 0.5;
   		text-align: center;
-  		display: inline-block;
-  		margin: 0 36px;
+		display: block;
+		margin: 10px auto;
 
 		span {
 			position: relative;
@@ -170,6 +227,11 @@
 			  left: 100%;
 			  margin-left: 2px;
 			}
+		}
+
+		@include largeBreakpoint {
+	  		display: inline-block;
+	  		margin: 0 36px;
 		}
 	}
 }

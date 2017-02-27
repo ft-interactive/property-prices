@@ -35,9 +35,10 @@ function setOutput(){
 	clearTimeout(selectTimeout);
 	const outputRect = output.getBoundingClientRect();
 	const inputRect = slider.getBoundingClientRect();
+	var currencySymbol = ((getSymbolFromCurrency(getCurrency())!== undefined)?getSymbolFromCurrency(getCurrency()):getCurrency()+' ');
 
 	const xPosition = ((slider.value - slider.min) / (slider.max - slider.min))*(inputRect.width - outputRect.width*.5) - sliderThumbWidth*.5;
-	output.innerHTML =  getSymbolFromCurrency(getCurrency()) + translateValue(slider.value);
+	output.innerHTML =  currencySymbol + translateValue(slider.value);
 	output.style = 'left:'+xPosition+'px;';
 
 	valueInput.value = slider.value*1000000;

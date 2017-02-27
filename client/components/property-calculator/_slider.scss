@@ -1,18 +1,20 @@
 .property-value-slider {
   position: relative;
   display: table;
-  width: 100%;
+  width: calc(100% - 20px);
   margin: 0 auto;
   max-width: 600px;
 
   output {
     position: absolute;
-    left: -10px;
+    left: 10px;
     bottom: 0;
-    width: 50px;
     color: #26747a;
     font-weight: 600;
+    display: inline-block;
+    width: 50px;
     text-align: center;
+    white-space: nowrap;
   }
 
   .slider-range {
@@ -24,6 +26,10 @@
       left: auto;
       right: 0;
     }
+  }
+
+  @include mediumBreakpoint {
+    max-width: 600px;
   }
 }
 

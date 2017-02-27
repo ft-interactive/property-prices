@@ -1,0 +1,22 @@
+$small: 490px;
+$medium:740px;
+$large: 972px;
+
+@mixin smallBreakpoint {
+  @media screen and (min-width: #{$small}) and (max-width: #{$medium - 1px}) {
+    @content;
+  }
+}
+
+
+@mixin mediumBreakpoint {
+  @media screen and (min-width: #{$medium}) {
+    @content;
+  }
+}
+
+@mixin largeBreakpoint {
+  @media screen and (min-width: #{$large}) {
+    @content;
+  }
+}

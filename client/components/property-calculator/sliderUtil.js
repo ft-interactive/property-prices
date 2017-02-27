@@ -66,6 +66,7 @@ function updateRangeToNearest500K(exchangeRate) {
 	
 	slider.setAttribute("min", newMin);
 	slider.setAttribute("max", newMax);
+	slider.setAttribute("step", getSteps(newMin, newMax));
 
 	//TODO: update step and value to keep slider position
 
@@ -73,6 +74,17 @@ function updateRangeToNearest500K(exchangeRate) {
 	sliderMax.textContent = translateValue(newMax);
 
 	setOutput();
+}
+
+function getSteps(valMin, valMax) {
+	var delta = valMax - valMin;
+	var stepAmount = delta/25;
+
+	if(stepAmount < 1) {
+		return .5;
+	} else {
+		return stepAmount;
+	}
 }
 
 function getCurrency() {
@@ -84,9 +96,11 @@ function translateValue(value) {
 	var readableAmount;
 
 	if(amount>=1000000000) {
-		readableAmount = (amount/1000000000).toFixed(1) + 'b';
+		readableAmount = (amount/1000000000).toFixed(2) + 'b';
+	} else if(amount >=10000000 && amount < 1000000000) {
+		readableAmount = Math.round(amount/1000000) + 'm';
 	}
-	else if(amount >=1000000 && amount < 1000000000) {
+	else if(amount >=1000000 && amount < 100000000) {
 		readableAmount = amount/1000000 + 'm';
 	} else {
 		readableAmount = amount/1000 +'k';

@@ -10,7 +10,7 @@ import './DOMElements';
 
     userInput.addEventListener('submit', (e) => {
       e.preventDefault();
-      console.log('submit!');
+
       output.innerHTML = '';
       var amount = document.getElementById('amountInput').value;
       var currency = document.getElementById('currencyInput').value;

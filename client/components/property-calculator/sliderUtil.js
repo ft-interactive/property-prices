@@ -8,6 +8,8 @@ const output = document.querySelector('.property-value-slider output');
 const valueInput = document.getElementById('amountInput');
 const sliderMin = document.querySelector('.slider-range.range-min');
 const sliderMax = document.querySelector('.slider-range.range-max');
+const propertyFormSubmit = document.querySelector('#propertyCalculator input[type="submit"]');
+var selectTimeout;
 var selectedCurrency ='GBP';
 
 export function initSlider(){
@@ -26,9 +28,11 @@ export function updateSlider(currency) {
 
 	if(selectedCurrency === 'GBP') updateRangeToNearest500K(1);
 	else translateRange();
+
 }
 
 function setOutput(){
+	clearTimeout(selectTimeout);
 	const outputRect = output.getBoundingClientRect();
 	const inputRect = slider.getBoundingClientRect();
 
@@ -37,6 +41,11 @@ function setOutput(){
 	output.style = 'left:'+xPosition+'px;';
 
 	valueInput.value = slider.value*1000000;
+
+	selectTimeout = setTimeout(function(){
+		propertyFormSubmit.click();
+		clearTimeout(selectTimeout);
+	}, 500);
 }
 
 function translateRange(){

@@ -1,6 +1,6 @@
-import * as d3 from 'd3';
 import axios from 'axios';
 import './DOMElements';
+import * as projection from './projection';
 
 ;(function(){
     const pd = getRecentPropertiesByLocation(window.propertyData);
@@ -44,10 +44,13 @@ import './DOMElements';
       for(var i in outputItems) {
         var propertySize =  outputItems[i].area + ' sq m';
 
+
         var result = document.createElement("p");
         result.setAttribute("class", 'property-area');
         result.innerHTML = 'In ' +outputItems[i].city + '<br>it buys you<br>' + '<span class="area">' + propertySize + '</span>';
         outputContainer.appendChild(result);
+
+        projection.getProjection(outputItems[i].area, outputItems[outputItems.length - 1].area, result);
       }
     }
 

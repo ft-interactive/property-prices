@@ -1,0 +1,79 @@
+#output {
+	background: #0d4e97;
+	position: relative;
+
+	.corner {
+		display: none;
+		position: absolute;
+		width: 20px;
+		height: 20px;
+		border: 1px solid white;
+		&.corner-top {
+			border-bottom: none;
+			top: 20px;
+		}
+
+		&.corner-bottom {
+			bottom: 20px;
+			border-top: none;
+		}
+
+		&.corner-left {
+			left: 20px;
+			border-right: none;
+		}
+
+		&.corner-right {
+			right: 20px;
+			border-left: none;
+		}
+
+		@include mediumBreakpoint {
+			display: block;
+		}
+	}
+
+	p {
+		color: white;
+		font-family: MetricWeb, sans-serif;
+		line-height: 1;
+
+		.area {
+			font-weight: 600;
+			font-size: 20px;
+		}
+	}
+}
+
+.output-container {
+	padding: 20px;
+
+	h1 {
+		color: white;
+		text-align: center;
+		padding: 0 20px;
+
+		.amount {
+			background: rgba(255,255,255,.4);
+			display: inline-block;
+			padding: 0 5px;
+		}
+	}
+}
+
+.property-area {
+	flex-grow: 1;
+	flex-basis: 100%;
+
+	@include largeBreakpoint {
+		flex-grow: 0;
+		flex-basis: 30%;
+		margin: 0 auto;	
+	}
+}
+
+.output-flexWrapper {
+	display: flex;
+	justify-content: center;
+	flex-flow: row wrap;
+}

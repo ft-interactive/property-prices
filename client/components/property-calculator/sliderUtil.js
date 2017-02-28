@@ -21,7 +21,7 @@ export function initSlider(){
 	sliderMax.textContent = translateValue(slider.getAttribute("max"));
 
 	window.addEventListener('resize', function(){
-		setOutput();
+		setOutput(true);
 	});
 
 	setOutput();
@@ -32,10 +32,9 @@ export function updateSlider(currency) {
 
 	if(selectedCurrency === 'GBP') updateRangeToNearest500K(1);
 	else translateRange();
-
 }
 
-function setOutput(){
+function setOutput(noReload){
 	clearTimeout(selectTimeout);
 	const outputRect = output.getBoundingClientRect();
 	const inputRect = slider.getBoundingClientRect();
@@ -47,10 +46,12 @@ function setOutput(){
 
 	valueInput.value = slider.value*1000000;
 
-	selectTimeout = setTimeout(function(){
-		propertyFormSubmit.click();
-		clearTimeout(selectTimeout);
-	}, 500);
+	if(!noReload) {
+		selectTimeout = setTimeout(function(){
+			propertyFormSubmit.click();
+			clearTimeout(selectTimeout);
+		}, 500);
+	}
 }
 
 function translateRange(){

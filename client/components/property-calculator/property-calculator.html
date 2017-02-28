@@ -43,7 +43,6 @@
 	</symbol>
 </svg>
 
-
 <section class="property-calculator-component graphic">
 	<form id="propertyCalculator">
 
@@ -112,7 +111,19 @@
 		</fieldset>
 		<input type="submit" class="hidden" value="Go!" />
 	</form>
-	<div id="output"></div>
+
+	<div id="output">
+		<span class="corner corner-top corner-left"></span>
+		<span class="corner corner-top corner-right"></span>
+		<span class="corner corner-bottom corner-right"></span>
+		<span class="corner corner-bottom corner-left"></span>
+
+		<div class="output-container">
+			<h1>What can your <span class="amount"></span> buy you?</h1>
+			<div class="output-flexWrapper">
+			</div>
+		</div>
+	</div>
 </section>
 <script>
 	window.propertyData = {{ propertyData | dump | safe }};

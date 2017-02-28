@@ -6,16 +6,20 @@ import './DOMElements';
     const pd = getRecentPropertiesByLocation(window.propertyData);
 
     var userInput = document.getElementById('propertyCalculator');
-    var output = document.getElementById('output');
+    var outputContainer = document.querySelector('.output-flexWrapper');
+    var outputAmount = document.querySelector('.output-container h1 .amount');
 
     userInput.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      output.innerHTML = '';
+      clearOutput();
       var amount = document.getElementById('amountInput').value;
       var currency = document.getElementById('currencyInput').value;
 
-      if(amount !== "" && currency !== "") convertAmount(amount, currency);
+      if(amount !== "" && currency !== "") {
+        convertAmount(amount, currency);
+        updateUserAmount(outputAmount);
+      }
     });
 
     function convertAmount(value, currency) {
@@ -31,11 +35,14 @@ import './DOMElements';
     function getArea(item, value, currency) {
         var toLocalCurrency = '(' + Math.round(item.convertedValue) + ' ' + item.currency +')';
         var userCurrency = value + ' ' + currency;
-        var propertySize = Math.floor(100*item.convertedValue/item.value)/100 + ' sqmt';
+        var propertySize = Math.round(item.convertedValue/item.value) + ' sq m';
+
+        //TODO: put all results in array to order by area size.
 
         var result = document.createElement("p");
-        result.textContent = userCurrency +' ' + toLocalCurrency + ' buys ' + propertySize + ' in ' + item.city;
-        output.appendChild(result);
+        result.setAttribute("class", 'property-area');
+        result.innerHTML = 'In ' +item.city + '<br>it buys you<br>' + '<span class="area">' + propertySize + '</span>';
+        outputContainer.appendChild(result);
     }
 
     function convertValue(fromCurrency, item, value) {
@@ -80,5 +87,18 @@ import './DOMElements';
       });
 
       return array;
+    }
+
+    function updateUserAmount(container) {
+      var value = document.querySelector('.property-value-slider output').innerHTML;
+      container.textContent = value;
+    }
+
+    function clearOutput() {
+      var outputElem = document.querySelectorAll('.property-area');
+
+      outputElem.forEach(function(elem){
+        elem.remove();
+      });
     }
 }());

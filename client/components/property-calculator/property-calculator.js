@@ -4,6 +4,8 @@ import './DOMElements';
 
 ;(function(){
     const pd = getRecentPropertiesByLocation(window.propertyData);
+    var callbackCount = 0;
+    var outputItems = [];
 
     var userInput = document.getElementById('propertyCalculator');
     var outputContainer = document.querySelector('.output-flexWrapper');
@@ -24,39 +26,54 @@ import './DOMElements';
 
     function convertAmount(value, currency) {
       for(var i in pd) {
-        if(pd[i].currency !== currency) convertValue(currency, pd[i], value);
+        if(pd[i].currency !== currency) convertValue(currency, pd[i], value, pd.length);
         else {
           pd[i].convertedValue = value;
-          getArea(pd[i],value, currency)
+          pd[i].area = getArea(pd[i]);
+          outputItems.push(pd[i]);
+          ++callbackCount;
         };
       }
     }
 
-    function getArea(item, value, currency) {
-        var toLocalCurrency = '(' + Math.round(item.convertedValue) + ' ' + item.currency +')';
-        var userCurrency = value + ' ' + currency;
-        var propertySize = Math.round(item.convertedValue/item.value) + ' sq m';
+    function prepareOutput() {
+      outputItems.sort(function(a,b){
+        return a.area - b.area;
+      });
 
-        //TODO: put all results in array to order by area size.
+      for(var i in outputItems) {
+        var propertySize =  outputItems[i].area + ' sq m';
 
         var result = document.createElement("p");
         result.setAttribute("class", 'property-area');
-        result.innerHTML = 'In ' +item.city + '<br>it buys you<br>' + '<span class="area">' + propertySize + '</span>';
+        result.innerHTML = 'In ' +outputItems[i].city + '<br>it buys you<br>' + '<span class="area">' + propertySize + '</span>';
         outputContainer.appendChild(result);
+      }
     }
 
-    function convertValue(fromCurrency, item, value) {
+    function convertValue(fromCurrency, item, value, cbCount) {
       var endpoint = 'http://markets.ft.com/research/webservices/securities/v1/quotes?symbols='+ fromCurrency + item.currency+'&source=54321';
 
       axios.get(endpoint)
         .then(function (response) {
           item.convertedValue = response.data.data.items[0].quote.lastPrice*value;
-          getArea(item, value, fromCurrency);
+          item.area = getArea(item);
+          
+          outputItems.push(item);
+          ++callbackCount;
+
+          if(cbCount === callbackCount) {
+            prepareOutput();
+          }
         })
         .catch(function (error) {
           console.log(error);
         });
 
+    }
+
+    function getArea(item) {
+      return Math.round(item.convertedValue/item.value);
     }
 
     function getRecentPropertiesByLocation(array) {
@@ -95,6 +112,9 @@ import './DOMElements';
     }
 
     function clearOutput() {
+      callbackCount = 0;
+      outputItems = [];
+
       var outputElem = document.querySelectorAll('.property-area');
 
       outputElem.forEach(function(elem){

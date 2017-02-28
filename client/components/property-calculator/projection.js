@@ -19,11 +19,14 @@ export function getProjection(area, maxArea, parent) {
     .style('stroke', 'white')
     .style('fill', 'none')
     .attr("transform", function(d) {
-	    return "translate("+ .5*getSquareDiagonal(getSquareSize(area)) +", 0) rotate(45)" 
+	    return "translate("+ .5*getSquareDiagonal(getSquareSize(getRefArea())) +", 0) rotate(45)" 
 	});
+
+	svg.attr('height', svg.node().getBBox().height);
+
 	window.addEventListener('resize', function(){
-		updateVisualisation(rect);
-	});//Weird error on resize up, but not down
+		updateVisualisation(svg, rect);
+	});//Weird error on resize up, but not down >> module oFooter Cannot read property 'removeEventListener' of undefined
 }
 
 function getSquareSize(area) {
@@ -35,14 +38,16 @@ function getSquareDiagonal(squareSide) {
 	return Math.sqrt(2*squareSide*squareSide);
 }
 
-function updateVisualisation(rect) {
+function updateVisualisation(svg, rect) {
 	var area = rect.attr("data-area");
 	rect
 	.attr('width', getSquareSize(area))
 	.attr('height', getSquareSize(area)) 
 	.attr("transform", function(d) {
-	    return "translate("+ .5*getSquareDiagonal(getSquareSize(area)) +", 0) rotate(45)" 
+	    return "translate("+ .5*getSquareDiagonal(getSquareSize(getRefArea())) +", 0) rotate(45)" 
 	});
+
+	svg.attr('height', svg.node().getBBox().height);
 }
 
 function getRefArea() {

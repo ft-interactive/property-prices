@@ -1,9 +1,9 @@
-/** Adapted from https://github.com/tomgp/boxy/tree/master/source **/
 import * as d3 from 'd3';
 
 var container, maxArea;
-
 const cubeProjectionHeight = 15;
+const bedReferenceDepth = 2.14;
+const svgOffset = 25;
 
 export function getProjection(area, maxArea, parent) {
 	setContainer(parent);
@@ -11,8 +11,15 @@ export function getProjection(area, maxArea, parent) {
 
 	var svg = d3.select(parent).append('svg').attr('class', 'property')
 	var g = svg.append("g").classed('surface-container', true);
-
 	var diagonal = getSquareDiagonal(getSquareSize(getRefArea()));
+
+	var slider = document.querySelector('.property-value-slider input');
+	var stepNum = .5*(1 + (slider.value - slider.min)/slider.step);
+
+	var referenceScale = (1/stepNum)*Math.round(getContainer().offsetWidth)/parseInt(getComputedStyle(getContainer(), null).maxWidth);
+
+	var refContainer = svg.append("g")
+	.classed("reference", true);
 
 	var rect = g.append("rect")
     .attr("x", 0 )
@@ -21,9 +28,8 @@ export function getProjection(area, maxArea, parent) {
     .attr("height", getSquareSize(area))
     .attr("data-area", area)
     .attr("transform", function(d) {
-	    return "translate("+.5*diagonal+", 0) rotate(45)"; 
+	    return "translate("+.5*diagonal+", "+(referenceScale*svgOffset)+") rotate(45)"; 
 	});
-
 
 	var outerCube = g.append("g");
 	var cube = outerCube.append("g").classed('cube-edges', true);
@@ -48,13 +54,27 @@ export function getProjection(area, maxArea, parent) {
 	
 	var containerSize = outerCube.node().getBBox();
 
-	var borderTranslation = [.5*(getSquareDiagonal(containerSize.width) + diagonal), .5*getSquareDiagonal(containerSize.height)];
+	var borderTranslation = [.5*(getSquareDiagonal(containerSize.width) + diagonal), (.5*getSquareDiagonal(containerSize.height) + referenceScale*svgOffset)];
 	outerCube.attr("transform", "translate("+ borderTranslation[0] +", "+ borderTranslation[1] +") rotate(135)");
 
-	svg.attr('height', outerCube.node().getBBox().height);
+	var reference = refContainer.append("use")
+	.attr("xlink:href", "#bedMan")
+	.attr("x", 0)
+	.attr("y", 0)
+	.attr("width", 88)
+	.attr("height", 64) //TODO: factorIN dimensions at scale 1million
+	// .attr("transform-origin", "0px 0px 0px")
+	.attr("transform", "scale("+referenceScale+","+referenceScale+")");
+
+	var xPos = .5*(diagonal - getSquareDiagonal(getSquareSize(area))) + referenceScale*cubeProjectionHeight;
+	var yPos = referenceScale*svgOffset + .5*(svg.node().getBBox().height - referenceScale*svgOffset) - refContainer.node().getBBox().height + cubeProjectionHeight;
+
+	refContainer.attr("transform", "translate("+xPos+","+yPos+") ");
+
+	svg.attr('height', svg.node().getBBox().height + referenceScale*svgOffset);
 
 	window.addEventListener('resize', function(){
-		updateVisualisation(svg, rect, outerCube);
+		updateVisualisation(svg, rect, outerCube, refContainer, reference, stepNum);
 	});//TODO: Weird error on resize up, but not down >> module oFooter Cannot read property 'removeEventListener' of undefined
 }
 
@@ -64,18 +84,19 @@ function getSquareSize(area) {
 }
 
 function getSquareDiagonal(squareSide) {
-	return Math.sqrt(2*squareSide*squareSide);
+	return Math.sqrt(2*Math.pow(squareSide, 2));
 }
 
-function updateVisualisation(svg, rect, outerCube) {
+function updateVisualisation(svg, rect, outerCube, refContainer, reference, stepNum) {
 	var area = rect.attr("data-area");
-	var diagonal = getSquareDiagonal(getSquareSize(getRefArea()));
+	var diagonal = getSquareDiagonal(getSquareSize(getRefArea()));	
+	var referenceScale = (1/stepNum)*Math.round(getContainer().offsetWidth)/parseInt(getComputedStyle(getContainer(), null).maxWidth);
 
 	rect
 	.attr('width', getSquareSize(area))
 	.attr('height', getSquareSize(area)) 
 	.attr("transform", function(d) {
-	    return "translate("+ .5*diagonal +", 0) rotate(45)"; 
+	    return "translate("+ .5*diagonal +", "+(referenceScale*svgOffset)+") rotate(45)"; 
 	});
 
 	var cube = outerCube.select('.cube-edges');
@@ -85,10 +106,17 @@ function updateVisualisation(svg, rect, outerCube) {
 	outerCube.select('.light-face').attr("height", getSquareSize(area));
 
 	var containerSize = outerCube.select('.cube-edges').node().getBBox();
-	var borderTranslation = [.5*(getSquareDiagonal(containerSize.width) + diagonal) , .5*getSquareDiagonal(containerSize.height)];
+	var borderTranslation = [.5*(getSquareDiagonal(containerSize.width) + diagonal) , .5*getSquareDiagonal(containerSize.height) + referenceScale*svgOffset];
 	outerCube.attr("transform", "translate("+ borderTranslation[0] +", "+ borderTranslation[1] +") rotate(135)");
 
-	svg.attr('height', outerCube.node().getBBox().height);
+	reference.attr("transform", "scale("+referenceScale+","+referenceScale+")");
+
+	var xPos = .5*(diagonal - getSquareDiagonal(getSquareSize(area))) + referenceScale*cubeProjectionHeight;
+	var yPos = referenceScale*svgOffset + .5*(svg.node().getBBox().height - referenceScale*svgOffset) - refContainer.node().getBBox().height + cubeProjectionHeight;
+
+	refContainer.attr("transform", "translate("+xPos+","+yPos+") ");
+
+	svg.attr('height', svg.node().getBBox().height + referenceScale*svgOffset);
 }
 
 function getRefArea() {

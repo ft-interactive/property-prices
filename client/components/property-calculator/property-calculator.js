@@ -32,6 +32,10 @@ import * as projection from './projection';
           pd[i].area = getArea(pd[i]);
           outputItems.push(pd[i]);
           ++callbackCount;
+
+          if(callbackCount === pd.length) {
+            prepareOutput();
+          }
         };
       }
     }

@@ -5,9 +5,9 @@ const cubeProjectionHeight = 15;
 const bedReferenceDepth = 2.14;
 const svgOffset = 25;
 
-export function getProjection(area, maxArea, parent) {
+export function getProjection(area, mA, parent) {
 	setContainer(parent);
-	setRefArea(maxArea);
+	setRefArea(mA);
 
 	var svg = d3.select(parent).append('svg').attr('class', 'property')
 	var g = svg.append("g").classed('surface-container', true);
@@ -17,8 +17,6 @@ export function getProjection(area, maxArea, parent) {
 	var rect = g.append("rect")
     .attr("x", 0 )
     .attr("y", 0 )
-    .attr("width", getSquareSize(area))
-    .attr("height", getSquareSize(area))
     .attr("data-area", area);
 
 	var outerCube = g.append("g");
@@ -98,7 +96,7 @@ function updateVisualisation(svg, rect, outerCube, refContainer, reference) {
 }
 
 function getRefArea() {
-	return maxArea
+	return maxArea;
 }
 
 function setRefArea(mA) {

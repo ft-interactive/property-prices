@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 var container, maxArea;
 const cubeProjectionHeight = 15;
 const bedReferenceDepth = 2.14;
-const svgOffset = 25;
+const svgOffset = 30;
 
 export function getProjection(area, mA, parent) {
 	setContainer(parent);
@@ -72,7 +72,7 @@ function updateVisualisation(svg, rect, outerCube, refContainer, reference) {
 	.attr('width', getSquareSize(area))
 	.attr('height', getSquareSize(area)) 
 	.attr("transform", function(d) {
-	    return "translate("+ .5*diagonal +", "+(referenceScale*svgOffset)+") rotate(45)"; 
+	    return "translate("+ .5*diagonal +", "+ svgOffset +") rotate(45)"; 
 	});
 
 	var cube = outerCube.select('.cube-edges');
@@ -82,15 +82,16 @@ function updateVisualisation(svg, rect, outerCube, refContainer, reference) {
 	outerCube.select('.light-face').attr("height", getSquareSize(area));
 
 	var containerSize = outerCube.select('.cube-edges').node().getBBox();
-	var borderTranslation = [.5*(getSquareDiagonal(containerSize.width) + diagonal) , .5*getSquareDiagonal(containerSize.height) + referenceScale*svgOffset];
+	var borderTranslation = [.5*(getSquareDiagonal(containerSize.width) + diagonal) , .5*getSquareDiagonal(containerSize.height)+svgOffset];
 	outerCube.attr("transform", "translate("+ borderTranslation[0] +", "+ borderTranslation[1] +") rotate(135)");
 
 	reference.attr("transform", "scale("+referenceScale+","+referenceScale+")");
 
-	var xPos = .5*(diagonal - getSquareDiagonal(getSquareSize(area))) + referenceScale*cubeProjectionHeight;
-	var yPos = referenceScale*svgOffset + .5*(svg.node().getBBox().height - referenceScale*svgOffset) - refContainer.node().getBBox().height + cubeProjectionHeight;
+	var xPos = .5*(diagonal - getSquareDiagonal(getSquareSize(area))) + svgOffset;
+	var yPos = .5*(cube.node().getBBox().height - svgOffset) - .75*(refContainer.node().getBBox().height);// - refContainer.node().getBBox().height;//.5*(svg.node().getBBox().height + svgOffset) - refContainer.node().getBBox().height + cubeProjectionHeight*referenceScale;
 
-	refContainer.attr("transform", "translate("+xPos+","+yPos+") ");
+	if(yPos < 0) yPos = 0;
+	refContainer.attr("transform", "translate("+xPos+","+ yPos +") ");
 
 	svg.attr('height', svg.node().getBBox().height + svgOffset);
 }

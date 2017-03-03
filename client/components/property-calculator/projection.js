@@ -92,7 +92,7 @@ function updateVisualisation(svg, rect, outerCube, refContainer, reference) {
 
 	refContainer.attr("transform", "translate("+xPos+","+yPos+") ");
 
-	svg.attr('height', svg.node().getBBox().height + referenceScale*svgOffset);
+	svg.attr('height', svg.node().getBBox().height + svgOffset);
 }
 
 function getRefArea() {

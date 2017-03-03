@@ -70,11 +70,15 @@ import * as projection from './projection';
 
       axios.get(endpoint)
         .then(function (response) {
-          item.convertedValue = response.data.data.items[0].quote.lastPrice*value;
-          item.area = getArea(item);
-          
-          outputItems.push(item);
-          ++callbackCount;
+          if(response.data.data.items[0].quote.lastPrice) {
+            item.convertedValue = response.data.data.items[0].quote.lastPrice*value;
+            item.area = getArea(item);
+            
+            outputItems.push(item);
+            ++callbackCount;
+          } else {
+            showError();
+          }
 
           if(cbCount === callbackCount) {
             prepareOutput();
@@ -125,4 +129,20 @@ import * as projection from './projection';
       container.textContent = value;
     }
 
+    function showError() {
+      var outputElem = document.querySelectorAll('.property-area');
+
+      outputElem.forEach(function(elem){
+        elem.remove();
+      });
+
+      var hasError = outputContainer.querySelector('.error-message');
+
+      if(hasError === null) {
+        var result = document.createElement("p");
+        result.setAttribute('class', 'error-message');
+        result.innerHTML = 'Sorry, there is no data for this currency';
+        outputContainer.appendChild(result);
+      }
+    }
 }());

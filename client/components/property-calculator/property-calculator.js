@@ -1,55 +1,97 @@
-import * as d3 from 'd3';
 import axios from 'axios';
 import './DOMElements';
+import * as projection from './projection';
 
 ;(function(){
     const pd = getRecentPropertiesByLocation(window.propertyData);
+    var callbackCount = 0;
+    var outputItems = [];
 
     var userInput = document.getElementById('propertyCalculator');
-    var output = document.getElementById('output');
+    var outputContainer = document.querySelector('.output-flexWrapper');
+    var outputAmount = document.querySelector('.output-container h1 .amount');
 
     userInput.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      output.innerHTML = '';
       var amount = document.getElementById('amountInput').value;
       var currency = document.getElementById('currencyInput').value;
 
-      if(amount !== "" && currency !== "") convertAmount(amount, currency);
+      if(amount !== "" && currency !== "") {
+        convertAmount(amount, currency);
+        updateUserAmount(outputAmount);
+      }
     });
 
     function convertAmount(value, currency) {
+      callbackCount = 0;
+      outputItems = [];
       for(var i in pd) {
-        if(pd[i].currency !== currency) convertValue(currency, pd[i], value);
+        if(pd[i].currency !== currency) convertValue(currency, pd[i], value, pd.length);
         else {
           pd[i].convertedValue = value;
-          getArea(pd[i],value, currency)
+          pd[i].area = getArea(pd[i]);
+          outputItems.push(pd[i]);
+          ++callbackCount;
+
+          if(callbackCount === pd.length) {
+            prepareOutput();
+          }
         };
       }
     }
 
-    function getArea(item, value, currency) {
-        var toLocalCurrency = '(' + Math.round(item.convertedValue) + ' ' + item.currency +')';
-        var userCurrency = value + ' ' + currency;
-        var propertySize = Math.floor(100*item.convertedValue/item.value)/100 + ' sqmt';
+    function prepareOutput() {
+      var outputElem = document.querySelectorAll('.property-area');
+
+      outputElem.forEach(function(elem){
+        elem.remove();
+      });
+
+      outputItems.sort(function(a,b){
+        return a.area - b.area;
+      });
+
+      for(var i in outputItems) {
+        var propertySize =  outputItems[i].area + ' sq m';
+
 
         var result = document.createElement("p");
-        result.textContent = userCurrency +' ' + toLocalCurrency + ' buys ' + propertySize + ' in ' + item.city;
-        output.appendChild(result);
+        result.setAttribute("class", 'property-area');
+        result.innerHTML = 'In ' +outputItems[i].city + '<br>it buys you<br>' + '<span class="area">' + propertySize + '</span>';
+        outputContainer.appendChild(result);
+
+        projection.getProjection(outputItems[i].area, outputItems[outputItems.length - 1].area, result);
+      }
     }
 
-    function convertValue(fromCurrency, item, value) {
-      var endpoint = 'http://markets.ft.com/research/webservices/securities/v1/quotes?symbols='+ fromCurrency + item.currency+'&source=54321';
+    function convertValue(fromCurrency, item, value, cbCount) {
+      var endpoint = 'http://markets.ft.com/research/webservices/securities/v1/quotes?symbols='+ fromCurrency + item.currency+'&source=3c164b65ddd48064';
 
       axios.get(endpoint)
         .then(function (response) {
-          item.convertedValue = response.data.data.items[0].quote.lastPrice*value;
-          getArea(item, value, fromCurrency);
+          if(response.data.data.items[0].quote.lastPrice) {
+            item.convertedValue = response.data.data.items[0].quote.lastPrice*value;
+            item.area = getArea(item);
+            
+            outputItems.push(item);
+            ++callbackCount;
+          } else {
+            showError();
+          }
+
+          if(cbCount === callbackCount) {
+            prepareOutput();
+          }
         })
         .catch(function (error) {
           console.log(error);
         });
 
+    }
+
+    function getArea(item) {
+      return Math.round(item.convertedValue/item.value);
     }
 
     function getRecentPropertiesByLocation(array) {
@@ -80,5 +122,27 @@ import './DOMElements';
       });
 
       return array;
+    }
+
+    function updateUserAmount(container) {
+      var value = document.querySelector('.property-value-slider output').innerHTML;
+      container.textContent = value;
+    }
+
+    function showError() {
+      var outputElem = document.querySelectorAll('.property-area');
+
+      outputElem.forEach(function(elem){
+        elem.remove();
+      });
+
+      var hasError = outputContainer.querySelector('.error-message');
+
+      if(hasError === null) {
+        var result = document.createElement("p");
+        result.setAttribute('class', 'error-message');
+        result.innerHTML = 'Sorry, there is no data for this currency';
+        outputContainer.appendChild(result);
+      }
     }
 }());

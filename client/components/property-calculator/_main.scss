@@ -1,0 +1,237 @@
+.hidden, .visually-hidden {
+	display: none;
+}
+
+#propertyCalculator {
+	.icon {
+	  width: 37px;
+	  height: 37px;
+	  display: inline-block;
+	  vertical-align: middle;
+	  margin-right: 10px;
+	}
+
+
+	fieldset {
+		border:none;
+		padding: 20px 10px;
+
+		label {
+			text-align: left;
+			display: block;
+			width: 100%;
+			font-size: 18px;
+			margin: 0 0 5px;
+			font-weight: 500;
+		}
+
+		@include smallBreakpoint {
+			label {
+				font-size: 22px;
+			}
+		}
+
+		@include mediumBreakpoint {
+			&.currency-container {
+				background-color: #f7e9d9;
+			}
+
+			label {
+				margin: 0 0 20px;
+				font-size: 24px;
+			}
+		}
+
+		@include largeBreakpoint {
+			padding: 20px 0;
+
+			label {
+				text-align: center;
+			}
+		}
+	}
+
+	#currency {
+		display: table;
+		margin: 0 auto;
+		.currency-button {
+		    display: inline-block;
+		   	width: 100%;
+		   	margin: 5px 0;
+		    -webkit-box-sizing: border-box;
+		    box-sizing: border-box;
+		    vertical-align: middle;
+		    border-style: solid;
+		    text-align: left;
+		    text-decoration: none;
+		    font-family: MetricWeb,sans-serif;
+		    font-weight: 400;
+		    border-radius: 0;
+		    cursor: pointer;
+		    -webkit-transition: .3s background-color ease-out,.15s color ease-out,.15s border-color ease-out;
+		    transition: .3s background-color ease-out,.15s color ease-out,.15s border-color ease-out;
+		    -webkit-user-select: none;
+		    -moz-user-select: none;
+		    -ms-user-select: none;
+		    user-select: none;
+		    background-clip: border-box;
+		    -webkit-font-smoothing: antialiased;
+		    -moz-osx-font-smoothing: grayscale;
+		    -moz-appearance: none;
+		    -webkit-appearance: none;
+		    padding: 5px 8px 5px 8px;
+		    font-size: 18px;
+		    line-height: 1;
+		    border: 1px solid rgba(38,116,122,.4);
+		    color: #17484C;
+		    background-color: #fff1e0;
+
+		    &.currency-input {
+		    	min-height: 48px;
+		    	border-color: #cec6b9;
+		    	width: 100%;
+
+		    	&::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+				  color: #74736c;
+				}
+				&::-moz-placeholder { /* Firefox 19+ */
+				  color: #74736c;
+				}
+				&:-ms-input-placeholder { /* IE 10+ */
+				  color: #74736c;
+				}
+				&:-moz-placeholder { /* Firefox 18- */
+				  color: #74736c;
+				}
+		    }
+
+		    &.selected {
+		    	background-color: rgba(43,187,191,.4);
+		    	-webkit-transition: .3s background-color ease-in;
+		    	transition: .3s background-color ease-in;
+		    }
+
+		    &:not(.selected):hover {
+		    	background-color: rgba(43,187,191,.08);
+		    	-webkit-transition: .3s background-color ease-in;
+		    	transition: .3s background-color ease-in;
+		    }
+
+		    @include mediumBreakpoint {
+		    	width: 225px;
+				margin: 0 10px;
+		    }
+
+		    @include largeBreakpoint {
+		    	width: 180px;
+				margin: 0 4px;
+
+		    	&.currency-input {
+					width: 300px;
+				}
+		    }
+		}
+
+		div.awesomplete {
+			position: relative;
+
+			>ul {
+				position: absolute;
+			    background: #fff1e0;
+			    width: 100%;
+			    margin: 0;
+			    list-style-type: none;
+			    line-height: 2;
+			    padding: 10px 0;
+			    border: 1px solid rgba(38,116,122,.4);
+			    border-top: none;
+			    z-index: 1;
+			    font-family: MetricWeb,sans-serif;
+			    font-size: 16px;
+
+			    li {
+			    	padding: 0 10px;
+
+			    	&:hover {
+			    		background-color: rgba(43,187,191,.08);
+			    		cursor: pointer;
+			    	}
+			    }
+			}
+
+			&:after {
+				content: '';
+				display: block;
+				width: 0;
+				height: 0;
+				border-color: #74736c transparent transparent;
+			    border-style: solid;
+			    border-width: 5px 5px 3px;
+			    position: absolute;
+				right: 30px;
+				top: 25px;
+			}
+
+			@include mediumBreakpoint {
+				width: 350px;
+				margin: 10px auto 0;
+
+				>ul {
+					font-size: 18px;
+					width: calc(100% - 2px);
+					margin: 0 10px;
+				}
+			}
+
+			@include largeBreakpoint {
+				width: auto;
+				display: inline-block;
+
+				> ul {
+					width: calc(100% - 9px);
+					margin: 0 3px;
+				}
+			}
+		}
+	}
+
+	.separator {
+		line-height: 0.5;
+  		text-align: center;
+		display: block;
+		margin: 10px auto;
+
+		span {
+			position: relative;
+			display: inline-block;
+			margin: 0;
+			font-weight: 200;
+			vertical-align: middle;
+			font-size: 18px;
+			
+			&:before, &:after {
+			  content: "";
+			  position: absolute;
+			  height: 2px;
+			  border-bottom: 1px solid #333;
+			  top: 9px;
+			  width: 16px;
+			}
+
+			&:before {
+			  right: 100%;
+			  margin-right: 2px;
+			}
+			
+			&:after {
+			  left: 100%;
+			  margin-left: 2px;
+			}
+		}
+
+		@include largeBreakpoint {
+	  		display: inline-block;
+	  		margin: 0 36px;
+		}
+	}
+}

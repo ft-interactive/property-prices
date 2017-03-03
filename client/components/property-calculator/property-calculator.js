@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import axios from 'axios';
+import './DOMElements';
 
 ;(function(){
     const pd = getRecentPropertiesByLocation(window.propertyData);
@@ -9,9 +10,10 @@ import axios from 'axios';
 
     userInput.addEventListener('submit', (e) => {
       e.preventDefault();
+
       output.innerHTML = '';
-      var amount = document.getElementById('amount').value;
-      var currency = document.getElementById('currency').value;
+      var amount = document.getElementById('amountInput').value;
+      var currency = document.getElementById('currencyInput').value;
 
       if(amount !== "" && currency !== "") convertAmount(amount, currency);
     });
@@ -41,7 +43,7 @@ import axios from 'axios';
 
       axios.get(endpoint)
         .then(function (response) {
-          item.convertedValue = response.data.data.items[0].quote.closePrice*value;
+          item.convertedValue = response.data.data.items[0].quote.lastPrice*value;
           getArea(item, value, fromCurrency);
         })
         .catch(function (error) {

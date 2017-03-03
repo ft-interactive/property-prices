@@ -14,7 +14,6 @@ import * as projection from './projection';
     userInput.addEventListener('submit', (e) => {
       e.preventDefault();
 
-      clearOutput();
       var amount = document.getElementById('amountInput').value;
       var currency = document.getElementById('currencyInput').value;
 
@@ -25,6 +24,8 @@ import * as projection from './projection';
     });
 
     function convertAmount(value, currency) {
+      callbackCount = 0;
+      outputItems = [];
       for(var i in pd) {
         if(pd[i].currency !== currency) convertValue(currency, pd[i], value, pd.length);
         else {
@@ -41,6 +42,12 @@ import * as projection from './projection';
     }
 
     function prepareOutput() {
+      var outputElem = document.querySelectorAll('.property-area');
+
+      outputElem.forEach(function(elem){
+        elem.remove();
+      });
+
       outputItems.sort(function(a,b){
         return a.area - b.area;
       });
@@ -118,14 +125,4 @@ import * as projection from './projection';
       container.textContent = value;
     }
 
-    function clearOutput() {
-      callbackCount = 0;
-      outputItems = [];
-
-      var outputElem = document.querySelectorAll('.property-area');
-
-      outputElem.forEach(function(elem){
-        elem.remove();
-      });
-    }
 }());

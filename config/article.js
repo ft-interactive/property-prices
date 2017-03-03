@@ -1,7 +1,7 @@
 export default () => ({ // eslint-disable-line
 
   // link file UUID
-  id: '',
+  id: '9d79ba9c-f75c-11e6-9516-2d969e0d3b65',
 
   // canonical URL of the published page
   // https://ig.ft.com/sites/property-prices get filled in by the ./configure script
@@ -11,20 +11,19 @@ export default () => ({ // eslint-disable-line
   //       new Date('2016-05-17T17:11:22Z')
   publishedDate: new Date(),
 
-  headline: 'Politics and the English Language',
+  headline: 'Prime property price calculator',
 
   // summary === standfirst (Summary is what the content API calls it)
-  summary: 'Political language is designed to make lies sound truthful' +
-           'and murder respectable, and to give an appearance of solidity to pure wind',
+  summary: 'How much prime residential property could you buy in the world’s priciest cities?',
 
   topic: {
-    name: 'Starter Kit',
-    url: '/foo',
+    name: 'Prime property',
+    url: 'https://www.ft.com/topics/themes/Prime_property',
   },
 
   relatedArticle: {
-    text: 'Related article »',
-    url: 'https://en.wikipedia.org/wiki/Politics_and_the_English_Language',
+    text: '',
+    url: '',
   },
 
   mainImage: {
@@ -38,17 +37,19 @@ export default () => ({ // eslint-disable-line
   // Byline can by a plain string, markdown, or array of authors
   // if array of authors, url is optional
   byline: [
-    { name: 'Author One', url: '/foo/bar' },
-    { name: 'Author Two' },
+    { name: 'Lily Madar', url: 'https://www.ft.com/' },
+    { name: 'Alida Smith', url: 'https://www.ft.com/stream/authorsId/ZmFjYjY2MTQtZTQyZi00NjIwLTkzYTEtN2EzNzIyNWRmYzI2-QXV0aG9ycw==' },
+    { name: 'Nathan Brooker', url: 'https://www.ft.com/stream/authorsId/Q0ItMDAwMTM2NQ==-QXV0aG9ycw==' },
   ],
 
   // Appears in the HTML <title>
-  title: 'FT Property calculator',
+  title: 'Prime property price tracker',
 
   // meta data
-  description: 'A property calculator',
+  description: 'How much prime property could you buy in London, New York, Paris, Hong Kong, Berlin, Singapore or Sydney?',
 
   /*
+
   TODO: Select Twitter card type -
         summary or summary_large_image
 

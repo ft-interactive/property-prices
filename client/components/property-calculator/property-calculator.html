@@ -1,0 +1,22 @@
+<h3>Hello world, this is a property calculator component</h3>
+<div id="output"></div>
+<!--<div>
+	{% for property in propertyData %}
+		{{property.city}} : {{property.value}}
+  {% endfor %}
+</div>-->
+
+<form id="propertyCalculator">
+	<input type="text" name="amount" id="amount" placeholder="Enter a value" />
+	<select id="currency">
+		<option value="GBP" selected>Pound Sterling</option>
+		<option value="USD">US Dollar</option>
+		<option value="EUR">Euro</option>
+		<option value="JPY">Japanese Yen</option>
+	</select>
+	<input type="submit" value="Go!" />
+</form>
+
+<script>
+	window.propertyData = {{ propertyData | dump | safe }};
+</script>

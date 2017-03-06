@@ -235,9 +235,10 @@
 			position: relative;
 			display: inline-block;
 			margin: 0;
-			font-weight: 200;
+			font-weight: 400;
 			vertical-align: middle;
-			font-size: 18px;
+			font-size: 16px;
+			-webkit-font-smoothing: antialiased;
 			
 			&:before, &:after {
 			  content: "";
@@ -245,17 +246,17 @@
 			  height: 2px;
 			  border-bottom: 1px solid #333;
 			  top: 9px;
-			  width: 16px;
+			  width: 15px;
 			}
 
 			&:before {
 			  right: 100%;
-			  margin-right: 2px;
+			  margin-right: 5px;
 			}
 			
 			&:after {
 			  left: 100%;
-			  margin-left: 2px;
+			  margin-left: 5px;
 			}
 		}
 

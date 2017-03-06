@@ -4,7 +4,7 @@
   width: calc(100% - 20px);
   margin: 0 auto;
   max-width: 600px;
-  height: 65px;
+  height: 68px;
 
   output {
     position: absolute;
@@ -33,7 +33,7 @@
 
   @include mediumBreakpoint {
     max-width: 600px;
-    height: 70px;
+    height: 73px;
     output {
       font-size: 22px;
     }
@@ -63,8 +63,8 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 input[type=range]::-webkit-slider-thumb {
   border: 3px solid #26747a;
-  height: 22px;
-  width: 22px;
+  height: 28px;
+  width: 28px;
   border-radius: 50%;
   background: #fff1e0;
   cursor: pointer;

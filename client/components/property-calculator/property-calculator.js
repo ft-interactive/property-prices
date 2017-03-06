@@ -66,7 +66,7 @@ import * as projection from './projection';
     }
 
     function convertValue(fromCurrency, item, value, cbCount) {
-      var endpoint = 'http://markets.ft.com/research/webservices/securities/v1/quotes?symbols='+ fromCurrency + item.currency+'&source=3c164b65ddd48064';
+      var endpoint = 'http://markets.ft.com/research/webservices/securities/v1/quotes?symbols='+ fromCurrency + item.currency+'&source=6ab4f82a42045502';
 
       axios.get(endpoint)
         .then(function (response) {

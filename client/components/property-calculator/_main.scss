@@ -24,7 +24,9 @@
 			margin: 0 0 5px;
 			font-weight: 500;
 		}
-
+		&.currency-container {
+			background-color: #f7e9d9;
+		}
 		@include smallBreakpoint {
 			label {
 				font-size: 22px;
@@ -32,10 +34,6 @@
 		}
 
 		@include mediumBreakpoint {
-			&.currency-container {
-				background-color: #f7e9d9;
-			}
-
 			label {
 				margin: 0 0 20px;
 				font-size: 24px;
@@ -43,7 +41,7 @@
 		}
 
 		@include largeBreakpoint {
-			padding: 20px 0;
+			// padding: 20px 0;
 
 			label {
 				text-align: center;
@@ -79,7 +77,7 @@
 		    -moz-osx-font-smoothing: grayscale;
 		    -moz-appearance: none;
 		    -webkit-appearance: none;
-		    padding: 5px 8px 5px 8px;
+		    padding: 7px 8px 4px 8px;
 		    font-size: 18px;
 		    line-height: 1;
 		    border: 1px solid rgba(38,116,122,.4);
@@ -90,6 +88,7 @@
 		    	min-height: 48px;
 		    	border-color: #cec6b9;
 		    	width: 100%;
+		    	padding: 4px 8px 7px 8px;
 
 		    	&::-webkit-input-placeholder { /* Chrome/Opera/Safari */
 				  color: #74736c;
@@ -118,13 +117,15 @@
 		    }
 
 		    @include mediumBreakpoint {
-		    	width: 225px;
-				margin: 0 10px;
+		    	width: 220px;
+					margin: 0 20px 0 0;
+				&:last-of-type {
+					margin: 0;
+				}
 		    }
 
 		    @include largeBreakpoint {
-		    	width: 180px;
-				margin: 0 4px;
+		    	width: 165px;
 
 		    	&.currency-input {
 					width: 300px;

@@ -40,6 +40,7 @@ export default () => ({ // eslint-disable-line
     { name: 'Lily Madar', url: 'https://www.ft.com/' },
     { name: 'Alida Smith', url: 'https://www.ft.com/stream/authorsId/ZmFjYjY2MTQtZTQyZi00NjIwLTkzYTEtN2EzNzIyNWRmYzI2-QXV0aG9ycw==' },
     { name: 'Nathan Brooker', url: 'https://www.ft.com/stream/authorsId/Q0ItMDAwMTM2NQ==-QXV0aG9ycw==' },
+    { name: 'Steven Bernard', url: 'https://twitter.com/sdbernard' },
   ],
 
   // Appears in the HTML <title>

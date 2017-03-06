@@ -4,6 +4,7 @@
   width: calc(100% - 20px);
   margin: 0 auto;
   max-width: 600px;
+  height: 65px;
 
   output {
     position: absolute;
@@ -11,6 +12,7 @@
     bottom: 0;
     color: #26747a;
     font-weight: 600;
+    font-size: 18px;
     display: inline-block;
     width: 50px;
     text-align: center;
@@ -21,6 +23,7 @@
     position: absolute;
     top: 0;
     left:-10px;
+    font-size: 14px;
 
     &.range-max {
       left: auto;
@@ -30,6 +33,13 @@
 
   @include mediumBreakpoint {
     max-width: 600px;
+    height: 70px;
+    output {
+      font-size: 22px;
+    }
+    .slider-range {
+      font-size: 16px;
+    }
   }
 }
 

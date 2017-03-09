@@ -58,7 +58,7 @@ function pointsList(faces){
 
 function squareCoords(area){
 	var sideLength = Math.sqrt(area) * 5;
-	var squareThickness = 1;
+	var squareThickness = 3;
 	var topFace = [
 		[-sideLength, squareThickness, -sideLength],
 		[0, squareThickness, -sideLength],

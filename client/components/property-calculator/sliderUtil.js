@@ -55,7 +55,7 @@ function setOutput(noReload){
 }
 
 function translateRange(){
-	var endpoint = 'http://markets.ft.com/research/webservices/securities/v1/quotes?symbols=GBP' + getCurrency() +'&source=6ab4f82a42045502';
+	var endpoint = 'http://markets.ft.com/research/webservices/securities/v1/quotes?symbols=GBP' + getCurrency() +'&source=5d32d7c412';
 
 	axios.get(endpoint)
     .then(function (response) {

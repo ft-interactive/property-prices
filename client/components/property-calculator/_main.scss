@@ -1,3 +1,31 @@
+.o-typography-lead {
+	font-size: 22px;
+	line-height: 26px;
+}
+
+.o-typography-heading1 {
+	font-size: 36px;
+	line-height: 40px;
+}
+
+.property-calculator-component {
+	margin-top: 30px;
+}
+
+@include mediumBreakpoint {
+
+	.o-typography-lead {
+		font-size: 26px;
+		line-height: 27px;
+	}
+
+	.o-typography-heading1 {
+		font-size: 40px;
+		line-height: 42px;
+	}
+
+}
+
 .hidden, .visually-hidden {
 	display: none;
 }
@@ -15,16 +43,19 @@
 	fieldset {
 		border:none;
 		padding: 20px 10px;
+		margin-bottom: 8px;
 
 		label {
 			text-align: left;
 			display: block;
 			width: 100%;
 			font-size: 18px;
-			margin: 0 0 5px;
+			margin: 0 0 10px;
 			font-weight: 500;
 		}
-
+		&.currency-container {
+			background-color: #f7e9d9;
+		}
 		@include smallBreakpoint {
 			label {
 				font-size: 22px;
@@ -32,21 +63,17 @@
 		}
 
 		@include mediumBreakpoint {
-			&.currency-container {
-				background-color: #f7e9d9;
-			}
-
 			label {
-				margin: 0 0 20px;
 				font-size: 24px;
+				text-align: center;
+				margin: 0 0 16px;
 			}
 		}
 
 		@include largeBreakpoint {
-			padding: 20px 0;
-
 			label {
-				text-align: center;
+				margin: 0 0 8px;
+			// padding: 20px 0;
 			}
 		}
 	}
@@ -79,7 +106,7 @@
 		    -moz-osx-font-smoothing: grayscale;
 		    -moz-appearance: none;
 		    -webkit-appearance: none;
-		    padding: 5px 8px 5px 8px;
+		    padding: 7px 8px 4px 8px;
 		    font-size: 18px;
 		    line-height: 1;
 		    border: 1px solid rgba(38,116,122,.4);
@@ -90,6 +117,7 @@
 		    	min-height: 48px;
 		    	border-color: #cec6b9;
 		    	width: 100%;
+		    	padding: 4px 8px 7px 8px;
 
 		    	&::-webkit-input-placeholder { /* Chrome/Opera/Safari */
 				  color: #74736c;
@@ -118,13 +146,15 @@
 		    }
 
 		    @include mediumBreakpoint {
-		    	width: 225px;
-				margin: 0 10px;
+		    	width: 220px;
+					margin: 0 20px 0 0;
+				&:last-of-type {
+					margin: 0;
+				}
 		    }
 
 		    @include largeBreakpoint {
-		    	width: 180px;
-				margin: 0 4px;
+		    	width: 165px;
 
 		    	&.currency-input {
 					width: 300px;
@@ -205,9 +235,10 @@
 			position: relative;
 			display: inline-block;
 			margin: 0;
-			font-weight: 200;
+			font-weight: 400;
 			vertical-align: middle;
-			font-size: 18px;
+			font-size: 16px;
+			-webkit-font-smoothing: antialiased;
 			
 			&:before, &:after {
 			  content: "";
@@ -215,17 +246,17 @@
 			  height: 2px;
 			  border-bottom: 1px solid #333;
 			  top: 9px;
-			  width: 16px;
+			  width: 15px;
 			}
 
 			&:before {
 			  right: 100%;
-			  margin-right: 2px;
+			  margin-right: 5px;
 			}
 			
 			&:after {
 			  left: 100%;
-			  margin-left: 2px;
+			  margin-left: 5px;
 			}
 		}
 

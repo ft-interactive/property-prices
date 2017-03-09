@@ -58,7 +58,7 @@ import * as projection from './projection';
 
         var result = document.createElement("p");
         result.setAttribute("class", 'property-area');
-        result.innerHTML = 'In ' +outputItems[i].city + '<br>it buys you<br>' + '<span class="area">' + propertySize + '</span>';
+        result.innerHTML = outputItems[i].city + '<br>' + '<span class="area">' + propertySize + '</span>';
         outputContainer.appendChild(result);
 
         projection.getProjection(outputItems[i].area, outputItems[outputItems.length - 1].area, result);

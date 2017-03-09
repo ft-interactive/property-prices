@@ -1,100 +1,85 @@
 import axios from 'axios';
 import './DOMElements';
+import * as d3 from 'd3'; 
 import * as projection from './projection';
 
 ;(function(){
     const pd = getRecentPropertiesByLocation(window.propertyData);
-    var callbackCount = 0;
-    var outputItems = [];
+    
+    var callbackCount = 0; //TODO get rid
+    var outputItems = []; 
 
     var userInput = document.getElementById('propertyCalculator');
     var outputContainer = document.querySelector('.output-flexWrapper');
     var outputAmount = document.querySelector('.output-container h1 .amount');
 
+    var exchangeRates = {
+      'USD':1,  //the default value is always dollars so 1:1 exchange rate
+    };
+
     userInput.addEventListener('submit', (e) => {
       e.preventDefault();
-
       var amount = document.getElementById('amountInput').value;
       var currency = document.getElementById('currencyInput').value;
 
-      if(amount !== "" && currency !== "") {
-        convertAmount(amount, currency);
-        updateUserAmount(outputAmount);
+      if(amount !== '' && currency !== '') {
+        if(!exchangeRates[currency]){
+          //go get that exchange rate
+          d3.json(marketDataURL(currency),function(data){
+            exchangeRates[currency] = data.data.items[0].quote.lastPrice;
+            update(amount, exchangeRates[currency], pd);
+          });
+        }else{
+          //otherwise go ahead
+          update(amount, exchangeRates[currency], pd)
+        }
       }
     });
 
-    function convertAmount(value, currency) {
-      callbackCount = 0;
-      outputItems = [];
-      for(var i in pd) {
-        if(pd[i].currency !== currency) convertValue(currency, pd[i], value, pd.length);
-        else {
-          pd[i].convertedValue = value;
-          pd[i].area = getArea(pd[i]);
-          outputItems.push(pd[i]);
-          ++callbackCount;
+    function update(amount, exchangeRate, data){
 
-          if(callbackCount === pd.length) {
-            prepareOutput();
-          }
-        };
-      }
-    }
-
-    function prepareOutput() {
-      var outputElem = document.querySelectorAll('.property-area');
-
-      outputElem.forEach(function(elem){
-        elem.remove();
-      });
-
-      outputItems.sort(function(a,b){
-        return a.area - b.area;
-      });
-
-      for(var i in outputItems) {
-        var propertySize =  outputItems[i].area + ' sq m';
-
-
-        var result = document.createElement("p");
-        result.setAttribute("class", 'property-area');
-        result.innerHTML = outputItems[i].city + '<br>' + '<span class="area">' + propertySize + '</span>';
-        outputContainer.appendChild(result);
-
-        projection.getProjection(outputItems[i].area, outputItems[outputItems.length - 1].area, result);
-      }
-    }
-
-    function convertValue(fromCurrency, item, value, cbCount) {
-      var endpoint = 'http://markets.ft.com/research/webservices/securities/v1/quotes?symbols='+ fromCurrency + item.currency+'&source=5d32d7c412';
-
-      axios.get(endpoint)
-        .then(function (response) {
-          if(response.data.data.items[0].quote.lastPrice) {
-            item.convertedValue = response.data.data.items[0].quote.lastPrice*value;
-            item.area = getArea(item);
-            
-            outputItems.push(item);
-            ++callbackCount;
-          } else {
-            showError();
-          }
-
-          if(cbCount === callbackCount) {
-            prepareOutput();
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
+      var dollarAmount = amount / exchangeRate;
+      var squareDrawer = projection.square()
+        .areaAccessor(function(d){
+          return Math.round(dollarAmount/d.value);
         });
 
+//add elements if they don't exist
+      d3.select('.output-flexWrapper')
+        .selectAll('p.property-area')
+        .data(data, function(d){ return d.city })
+          .enter()
+        .append('p')
+          .attr('class', 'property-area')
+        .call(function(parent){
+          parent.append('span')
+            .attr('class','city-name')
+            .text(function(d){
+              return d.city;
+            });
+          parent.append('span')
+            .attr('class','area')
+            .html(function(d){ return ' ' + Math.round(dollarAmount/d.value) + ' m<sup>2</sup>' });
+          
+          parent.append('svg')
+            .attr('class','property');
+        });
+//update elements
+      d3.selectAll('.property-area svg.property')
+        .call(squareDrawer);
+        
+
+
     }
 
-    function getArea(item) {
-      return Math.round(item.convertedValue/item.value);
+    function marketDataURL(currency){
+      return `http://markets.ft.com/research/webservices/securities/v1/quotes?symbols=usd${currency.toLowerCase()}&source=5d32d7c412`
     }
 
+
+//return a unique list of cities (favouring the most recent data point)
     function getRecentPropertiesByLocation(array) {
+      console.log(array);
       var duplicateArray = sortPropertiesByLocationAndDate(array.slice());
 
       for(var i = duplicateArray.length - 1; i > 0; --i) {

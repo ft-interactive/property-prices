@@ -69,24 +69,25 @@
 	svg {
 		display: block;
 		width: 100%;
-		vector-effect: non-scaling-stroke;
+		stroke-linejoin: round;
+		stroke-width: 0.3;
 
-		.surface-container {
+		
+		.top-face{
+			fill: none;
 			stroke: white;
-			stroke-width: 2px;
-			fill:#0d4e97;
-			transform: rotate3d(1, 0, 0, 55deg);
+		}
+		
+		.dark-face {
+			fill: #757fb5;
+			stroke: white;
 		}
 
-		.cube-edges {
-			.dark-face {
-				fill: #757fb5;
-			}
-
-			.light-face {
-				fill: #c8cae1;
-			}
+		.light-face {
+			fill: #c8cae1;
+			stroke: white;
 		}
+		
 	}
 
 	@include largeBreakpoint {

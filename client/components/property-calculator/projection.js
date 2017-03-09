@@ -8,6 +8,14 @@ export function square() {
 	var boundary = axonometric.axonometricBounds();
 	var pathGenerator = axonometric.axonometricPath();
 	var margin = {top:10,left:10,bottom:10,right:10}
+	var comparison = [{
+			position:[0,0,0],
+			id:'#bed',
+		},
+		{
+			position:[0,0,0],
+			id:'#person',
+		}];
 
 	function drawSquare(parent){
 		//work out the viewport required
@@ -18,8 +26,8 @@ export function square() {
 			.attr('viewBox', [bounds.x-5, bounds.y-10, bounds.width+10, bounds.height+20]);
 
 		parent.selectAll('path')
-			.data(function(d){
-				return squareCoords( areaAccessor(d) );
+			.data(function(d){ 
+				return squareCoords( areaAccessor(d) ); 
 			})
 			.enter()
 			.append('path')
@@ -34,6 +42,11 @@ export function square() {
 				console.log(d.shape); 
 				return pathGenerator(d.shape) + 'z'; 
 			});
+		
+		parent.selectAll('use')
+			.data()
+			.enter()
+
 	}
 
 	drawSquare.areaAccessor = function(x){

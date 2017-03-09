@@ -8,14 +8,7 @@ export function square() {
 	var boundary = axonometric.axonometricBounds();
 	var pathGenerator = axonometric.axonometricPath();
 	var margin = {top:10,left:10,bottom:10,right:10}
-	var comparisons = [{
-			position:[0,0,0],
-			id:'#bed',
-		},
-		{
-			position:[0,0,0],
-			id:'#person',
-		}];
+	var comparisons = [{ id:'#bedMan' }];
 
 	function drawSquare(parent){
 		//work out the viewport required
@@ -47,6 +40,9 @@ export function square() {
 			.data(comparisons)
 			.enter()
 			.append('use')
+			.attr('xlink:href', function(d){
+				return d.id;
+			});
 			
 
 	}

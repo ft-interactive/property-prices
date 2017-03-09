@@ -8,7 +8,7 @@ export function square() {
 	var boundary = axonometric.axonometricBounds();
 	var pathGenerator = axonometric.axonometricPath();
 	var margin = {top:10,left:10,bottom:10,right:10}
-	var comparison = [{
+	var comparisons = [{
 			position:[0,0,0],
 			id:'#bed',
 		},
@@ -44,8 +44,10 @@ export function square() {
 			});
 		
 		parent.selectAll('use')
-			.data()
+			.data(comparisons)
 			.enter()
+			.append('use')
+			
 
 	}
 

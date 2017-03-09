@@ -23,6 +23,7 @@ export function square() {
 			})
 			.enter()
 			.append('path')
+				.attr('vector-effect','non-scaling-stroke')
 				.attr('class', function(d){
 					return d.class; 
 				});

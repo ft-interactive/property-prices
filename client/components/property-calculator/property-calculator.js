@@ -37,12 +37,12 @@ import * as projection from './projection';
     });
 
     function update(amount, exchangeRate, data){
-
+      function getArea(d){
+          return Math.round(dollarAmount/d.value);
+      }
       var dollarAmount = amount / exchangeRate;
       var squareDrawer = projection.square()
-        .areaAccessor(function(d){
-          return Math.round(dollarAmount/d.value);
-        });
+        .areaAccessor(getArea);
 
 //add elements if they don't exist
       d3.select('.output-flexWrapper')
@@ -59,10 +59,20 @@ import * as projection from './projection';
             });
           parent.append('span')
             .attr('class','area')
-            .html(function(d){ return ' ' + Math.round(dollarAmount/d.value) + ' m<sup>2</sup>' });
+            .html(function(d){ return ' ' + getArea(d) + ' m<sup>2</sup>' });
           
           parent.append('svg')
-            .attr('class','property');
+            .attr('class','property')
+
+            // .append('g').attr('class','comparison-container')
+            // .attr('transform', function(d){
+            //   var sideLength = Math.sqrt( getArea(d) ) * squareDrawer.scale();
+            //   console.log( squareDrawer.projection()([-sideLength, 0, 0]) )
+            //   return 'translate(' + squareDrawer.projection()([-sideLength, 0, 0]) + ')'
+            // })
+            // .append('use')
+            // .attr('class','comparison-image')
+            // .attr('xlink:href', '#bedMan' );
         });
 //update elements
       d3.selectAll('.property-area svg.property')

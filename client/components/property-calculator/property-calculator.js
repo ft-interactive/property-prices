@@ -2,6 +2,8 @@ import axios from 'axios';
 import './DOMElements';
 import * as d3 from 'd3'; 
 import * as projection from './projection';
+import {translateValue} from './sliderUtil';
+import {getSymbolFromCurrency} from 'currency-symbol-map';
 
 ;(function(){
     const pd = getRecentPropertiesByLocation(window.propertyData);
@@ -24,19 +26,19 @@ import * as projection from './projection';
 
       if(amount !== '' && currency !== '') {
         if(!exchangeRates[currency]){
-          //go get that exchange rate
+          //go get that exchange rate if we don't already have it
           d3.json(marketDataURL(currency),function(data){
             exchangeRates[currency] = data.data.items[0].quote.lastPrice;
-            update(amount, exchangeRates[currency], pd);
+            update(amount, exchangeRates[currency], pd, currency);
           });
         }else{
           //otherwise go ahead
-          update(amount, exchangeRates[currency], pd)
+          update(amount, exchangeRates[currency], pd, currency)
         }
       }
     });
 
-    function update(amount, exchangeRate, data){
+    function update(amount, exchangeRate, data, currency){
       function getArea(d){
           return Math.round(dollarAmount/d.value);
       }
@@ -64,21 +66,16 @@ import * as projection from './projection';
           parent.append('svg')
             .attr('class','property')
 
-            // .append('g').attr('class','comparison-container')
-            // .attr('transform', function(d){
-            //   var sideLength = Math.sqrt( getArea(d) ) * squareDrawer.scale();
-            //   console.log( squareDrawer.projection()([-sideLength, 0, 0]) )
-            //   return 'translate(' + squareDrawer.projection()([-sideLength, 0, 0]) + ')'
-            // })
-            // .append('use')
-            // .attr('class','comparison-image')
-            // .attr('xlink:href', '#bedMan' );
         });
 //update elements
       d3.selectAll('.property-area svg.property')
         .call(squareDrawer);
         
-
+      //update areas
+      d3.selectAll('.property-area span.area')
+        .html(function(d){ return ' ' + getArea(d) + ' m<sup>2</sup>' });
+      
+      d3.select('h1 span.amount').text(getSymbolFromCurrency(currency) +  translateValue( amount ));
 
     }
 

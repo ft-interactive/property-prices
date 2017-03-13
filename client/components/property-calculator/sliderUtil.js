@@ -17,8 +17,8 @@ export function initSlider(){
 		setOutput();
 	});
 
-	sliderMin.textContent = translateValue(slider.getAttribute("min"));
-	sliderMax.textContent = translateValue(slider.getAttribute("max"));
+	sliderMin.textContent = translateValue(slider.getAttribute("min") * 1000000);
+	sliderMax.textContent = translateValue(slider.getAttribute("max") * 1000000);
 
 	window.addEventListener('resize', function(){
 		setOutput(true);
@@ -41,7 +41,7 @@ function setOutput(noReload){
 	var currencySymbol = ((getSymbolFromCurrency(getCurrency())!== undefined)?getSymbolFromCurrency(getCurrency()):getCurrency()+' ');
 
 	const xPosition = ((slider.value - slider.min) / (slider.max - slider.min))*(inputRect.width - outputRect.width*.5) - sliderThumbWidth*.5;
-	output.innerHTML =  currencySymbol + translateValue(slider.value);
+	output.innerHTML =  currencySymbol + translateValue(slider.value * 1000000);
 	output.style = 'left:'+xPosition+'px;';
 
 	valueInput.value = slider.value*1000000;
@@ -77,8 +77,8 @@ function updateRangeToNearest500K(exchangeRate) {
 	slider.setAttribute("step", newStep);
 	slider.value = newMin + stepNum*newStep;
 
-	sliderMin.textContent = translateValue(newMin);
-	sliderMax.textContent = translateValue(newMax);
+	sliderMin.textContent = translateValue(newMin * 1000000);
+	sliderMax.textContent = translateValue(newMax * 1000000);
 
 	setOutput();
 }
@@ -98,12 +98,12 @@ function getCurrency() {
 	return selectedCurrency;
 }
 
-function translateValue(value) {
-	var amount = value*1000000;
+export function translateValue(value, precision = 2) {
+	var amount = value;
 	var readableAmount;
 
 	if(amount>=1000000000) {
-		readableAmount = (amount/1000000000).toFixed(2) + 'b';
+		readableAmount = (amount/1000000000).toFixed(precision) + 'b';
 	} else if(amount >=100000000 && amount < 1000000000) {
 		readableAmount = Math.round(amount/1000000) + 'm';
 	}

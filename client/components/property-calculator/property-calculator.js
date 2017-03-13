@@ -1,15 +1,13 @@
 import axios from 'axios';
-import './DOMElements';
 import * as d3 from 'd3'; 
 import * as projection from './projection';
-import {translateValue} from './sliderUtil';
+import 'awesomplete';
+import * as slider from './sliderUtil';
 import {getSymbolFromCurrency} from 'currency-symbol-map';
+import * as market from './exchange-rate-data';
 
 const pd = getRecentPropertiesByLocation(window.propertyData);
-
-var exchangeRates = {
-  'USD':1,  //the default value is always dollars so 1:1 exchange rate
-};
+const rates = market.exchangeRate();
 
 document.getElementById('propertyCalculator').addEventListener('submit', (e) => {
   e.preventDefault();
@@ -17,16 +15,9 @@ document.getElementById('propertyCalculator').addEventListener('submit', (e) => 
   var currency = document.getElementById('currencyInput').value;
 
   if(amount !== '' && currency !== '') {
-    if(!exchangeRates[currency]){
-      //go get that exchange rate if we don't already have it
-      d3.json(marketDataURL(currency),function(data){
-        exchangeRates[currency] = data.data.items[0].quote.lastPrice;
-        update(amount, exchangeRates[currency], pd, currency);
-      });
-    }else{
-      //otherwise go ahead
-      update(amount, exchangeRates[currency], pd, currency)
-    }
+    rates(currency, null, function(r){
+      update(amount, r, pd, currency);
+    });
   }
 });
 
@@ -34,8 +25,8 @@ function update(amount, exchangeRate, data, currency){
   function getArea(d){
       return Math.round(dollarAmount/d.value);
   }
-  var dollarAmount = amount / exchangeRate;
-  var squareDrawer = projection.square()
+  const dollarAmount = amount / exchangeRate;
+  const squareDrawer = projection.square()
     .areaAccessor(getArea);
 
 //add elements if they don't exist
@@ -61,22 +52,17 @@ function update(amount, exchangeRate, data, currency){
           .attr('class','property')
 
       });
-    })
+    });
 
-//update elements
+  //update elements
   d3.selectAll('.property-area svg.property')
     .call(squareDrawer);
     
-  //update areas
-  d3.selectAll('.property-area span.area')
+ d3.selectAll('.property-area span.area')
     .html(function(d){ return ' ' + getArea(d) + ' m<sup>2</sup>' });
   
-  d3.select('h1 span.amount').text(getSymbolFromCurrency(currency) +  translateValue( amount ));
+  d3.select('h1 span.amount').text(getSymbolFromCurrency(currency) +  slider.translateValue( amount ));
 
-}
-
-function marketDataURL(currency){
-  return `http://markets.ft.com/research/webservices/securities/v1/quotes?symbols=usd${currency.toLowerCase()}&source=5d32d7c412`
 }
 
 //return a unique list of cities (favouring the most recent data point)
@@ -111,14 +97,48 @@ function sortPropertiesByLocationAndDate(array) {
   return array;
 }
 
-function updateUserAmount(container) {
-  var value = document.querySelector('.property-value-slider output').innerHTML;
-  container.textContent = value;
-}
+function UI(){
+	var buttons = document.querySelectorAll('.currency-button:not(.currency-input)');
+	var currency = document.getElementById('currencyInput');
+	var completeInput = document.querySelector('input.awesomplete');
 
+	buttons.forEach(function(button){
+		button.addEventListener('click', function(e){
+			e.preventDefault();
+			resetCurrencySelection(button);
+			currency.value = button.dataset.currency;
+			e.currentTarget.classList.add('selected');
+			completeInput.value = null;
+			slider.updateSlider(currency.value);
+		});
+	});
+
+	completeInput.addEventListener('awesomplete-selectcomplete', function(e){
+		resetCurrencySelection(null);
+		e.currentTarget.classList.add('selected');
+		currency.value = completeInput.value;
+		slider.updateSlider(currency.value);
+	});
+
+	function resetCurrencySelection(target) {
+		buttons.forEach(function(button){
+			if(button !== target) button.classList.remove('selected');
+		});
+		completeInput.classList.remove('selected');
+	}
+
+	slider.initSlider();
+	var trigger = document.querySelector('.currency-button[data-currency="GBP"]');
+	trigger.click();
+}
+UI();
+
+
+
+//TODO, hook this up again
 function showError() {
-  var outputElem = document.querySelectorAll('.property-area');
-  var outputContainer = document.querySelector('.output-flexWrapper');
+  const outputElem = document.querySelectorAll('.property-area');
+  const outputContainer = document.querySelector('.output-flexWrapper');
 
   outputElem.forEach(function(elem){
     elem.remove();

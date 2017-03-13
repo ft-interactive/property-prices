@@ -1,14 +1,17 @@
 import {getSymbolFromCurrency} from 'currency-symbol-map';
 import axios from 'axios';
 
+
+
 const sliderThumbWidth = 28; //this is the value for chrome
 const sliderContainer = document.querySelector('.property-value-slider');
 const slider = document.querySelector('.property-value-slider input');
 const output = document.querySelector('.property-value-slider output');
-const valueInput = document.getElementById('amountInput');
+const valueInput = document.querySelector('#amountInput');
 const sliderMin = document.querySelector('.slider-range.range-min');
 const sliderMax = document.querySelector('.slider-range.range-max');
 const propertyFormSubmit = document.querySelector('#propertyCalculator input[type="submit"]');
+
 var selectTimeout;
 var selectedCurrency ='GBP';
 
@@ -58,12 +61,12 @@ function translateRange(){
 	var endpoint = 'http://markets.ft.com/research/webservices/securities/v1/quotes?symbols=GBP' + getCurrency() +'&source=5d32d7c412';
 
 	axios.get(endpoint)
-    .then(function (response) {
-      updateRangeToNearest500K(response.data.data.items[0].quote.lastPrice);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
+		.then(function (response) {
+		updateRangeToNearest500K(response.data.data.items[0].quote.lastPrice);
+		})
+		.catch(function (error) {
+		console.log(error);
+		});
 }
 
 function updateRangeToNearest500K(exchangeRate) {

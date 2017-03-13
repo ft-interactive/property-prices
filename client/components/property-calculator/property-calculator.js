@@ -51,22 +51,26 @@ import {getSymbolFromCurrency} from 'currency-symbol-map';
         .selectAll('p.property-area')
         .data(data, function(d){ return d.city })
           .enter()
-        .append('p')
-          .attr('class', 'property-area')
-        .call(function(parent){
-          parent.append('span')
-            .attr('class','city-name')
-            .text(function(d){
-              return d.city;
-            });
-          parent.append('span')
-            .attr('class','area')
-            .html(function(d){ return ' ' + getArea(d) + ' m<sup>2</sup>' });
-          
-          parent.append('svg')
-            .attr('class','property')
+        .call(function(wrapper){
+          wrapper.append('p')
+            .attr('class', 'property-area')
+            .call(function(parent){
+              parent.append('span')
+                .attr('class','city-name')
+                .text(function(d){
+                  return d.city;
+                });
 
-        });
+            parent.append('span')
+              .attr('class','area')
+              .html(function(d){ return ' ' + getArea(d) + ' m<sup>2</sup>' });
+            
+            parent.append('svg')
+              .attr('class','property')
+
+          });
+        })
+
 //update elements
       d3.selectAll('.property-area svg.property')
         .call(squareDrawer);

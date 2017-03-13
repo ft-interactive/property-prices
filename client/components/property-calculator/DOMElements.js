@@ -20,7 +20,7 @@ import * as slider from './sliderUtil';
 	completeInput.addEventListener('awesomplete-selectcomplete', function(e){
 		resetCurrencySelection(null);
 		e.currentTarget.classList.add('selected');
-		currency.value= completeInput.value;
+		currency.value = completeInput.value;
 		slider.updateSlider(currency.value);
 	});
 

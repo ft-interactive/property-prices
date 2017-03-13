@@ -84,14 +84,28 @@ export function square() {
 				var end = [...start];
 				end[0] += 2.17 * scale;
 				end[1] += bedAspect * scale;
+				var bedBounds = boundary([start, end]);				
+				start[1] = scale * 1.5;
 				var anchor = projection(start);
-				var bedBounds = boundary([start, end]);
-				return {
-					x:anchor[0],
-					y:anchor[1],
+
+				return [{
+					anchor:anchor,
 					width:bedBounds.width,
-				};
+					id:'#bedMan',
+				}];
+			}).enter()
+			.append('use')
+				.attr('transform',function(d){
+					return 'translate(' +d.anchor+ ')';
+				})
+				.attr('xlink:href',d=>d.id)
+
+		parent.selectAll('use')
+			.transition()
+			.attr('transform',function(d){
+				return 'translate(' +d.anchor+ ')';
 			})
+
 
 		parent.selectAll('line')
 			.transition()

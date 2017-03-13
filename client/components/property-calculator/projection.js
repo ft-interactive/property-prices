@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import * as axonometric from 'd3-axonometric';
+import { comparison } from './comparison-paths'
 
 
 
@@ -28,13 +29,11 @@ export function square() {
 		if(maxArea === undefined){ maxArea = d3.max(parent.data(), areaAccessor); }
 		var bounds = boundary( pointsList(squareCoords(maxArea, scale)) );
 
-		var comparisonNodes = d3.select('symbol#bedMan g').node().innerHTML;
-		console.log(comparisonNodes);
+//		var comparisonNodes = d3.select('symbol#bedMan g').node().innerHTML;
 
 		parent.transition()
 			.attr('viewBox', [bounds.x-5, bounds.y-10, bounds.width+10, bounds.height+20]);
 		
-
 
 		parent.selectAll('path')
 			.data(function(d){ 
@@ -44,37 +43,18 @@ export function square() {
 			.append('path')
 				.attr('vector-effect','non-scaling-stroke')
 				.attr('class', function(d){
-					return d.class; 
+					return d.class + ' cuboid-face'; 
 				});
 
-		parent.selectAll('path')
+		parent.selectAll('path.cuboid-face')
 			.transition()
 			.attr('d', function(d){
 				return pathGenerator(d.shape) + 'z'; 
 			});
 
-		parent.selectAll('line') //TODO remove this bit (effectively jsut a marker for where the bed should go)
-			.data(function(d){
-				var coords = squareCoords(areaAccessor(d),scale)[2].shape; //get the top face coords
-				var bedAspect = 0.78;//the 'aspect ratio' of the beds sides
-				var start1 = [...coords[3]]; //left most position of the square
 
-				var start2 = [...coords[3]];
-				start2[2] -= bedAspect * scale;
 
-				var end1 = [...start1];
-				end1[1] += bedAspect * scale;
-				end1[0] += 2.17 * scale;
-
-				var end2 = [...end1];
-				end2[2] += bedAspect * scale;
-
-				return [lineGenerator(start1,end1),lineGenerator(start2,end2)];
-			})
-			.enter()
-			.append('line').attr('class','ref');
-
-		parent.selectAll('use')
+		parent.selectAll('g.comparison-container')
 			.data(function(d){
 				var coords = squareCoords(areaAccessor(d),scale)[2].shape; //get the top face coords
 				var bedAspect = 0.78;//the 'aspect ratio' of the beds sides
@@ -83,41 +63,28 @@ export function square() {
 				end[0] += 2.17 * scale;
 				end[1] += bedAspect * scale;
 				var bedBounds = boundary([start, end]);				
-				start[1] = scale * 1.5;
+				start[1] = scale*1.4;
 				var anchor = projection(start);
 
 				return [{
 					anchor:anchor,
 					width:bedBounds.width,
-					id:'#bedMan',
 				}];
 			}).enter()
-			//clone instead of use
-			.call(function(parent){
-				parent.append('g')
+				.append('g')
 					.attr('class','comparison-container')
-					.html( comparisonNodes );
-
-			})
-				// .attr('transform',function(d){
-				// 	return 'translate(' + d.anchor + ')';
-				// })
-				// .attr('xlink:href',d=>d.id)
+					.attr('transform',function(d){
+						return 'translate(' +d.anchor+ ') scale(3.8)';
+					})
+					.html( comparison );
 
 
-		parent.selectAll('use')
+		parent.selectAll('g.comparison-container')
 			.transition()
 			.attr('transform',function(d){
-				return 'translate(' +d.anchor+ ')';
-			})
+				return 'translate(' +d.anchor+ ') scale(3.9)';
+			});
 
-
-		parent.selectAll('line')
-			.transition()
-			.attr('x1', d=>d.x1)
-			.attr('y1', d=>d.y1)
-			.attr('x2', d=>d.x2)
-			.attr('y2', d=>d.y2);
 
 	}
 

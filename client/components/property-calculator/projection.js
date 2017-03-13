@@ -28,13 +28,12 @@ export function square() {
 		if(maxArea === undefined){ maxArea = d3.max(parent.data(), areaAccessor); }
 		var bounds = boundary( pointsList(squareCoords(maxArea, scale)) );
 
+		var comparisonNodes = d3.select('symbol#bedMan g').node().innerHTML;
+		console.log(comparisonNodes);
+
 		parent.transition()
 			.attr('viewBox', [bounds.x-5, bounds.y-10, bounds.width+10, bounds.height+20]);
 		
-		parent.select('.comparison-image')
-			.attr('transform',function(d){
-				console.log(areaAccessor(d));
-			});
 
 
 		parent.selectAll('path')
@@ -58,7 +57,6 @@ export function square() {
 			.data(function(d){
 				var coords = squareCoords(areaAccessor(d),scale)[2].shape; //get the top face coords
 				var bedAspect = 0.78;//the 'aspect ratio' of the beds sides
-				console.log(coords);
 				var start1 = [...coords[3]]; //left most position of the square
 
 				var start2 = [...coords[3]];
@@ -70,7 +68,7 @@ export function square() {
 
 				var end2 = [...end1];
 				end2[2] += bedAspect * scale;
-				console.log( boundary([start1, end1]) )
+
 				return [lineGenerator(start1,end1),lineGenerator(start2,end2)];
 			})
 			.enter()
@@ -94,11 +92,18 @@ export function square() {
 					id:'#bedMan',
 				}];
 			}).enter()
-			.append('use')
-				.attr('transform',function(d){
-					return 'translate(' +d.anchor+ ')';
-				})
-				.attr('xlink:href',d=>d.id)
+			//clone instead of use
+			.call(function(parent){
+				parent.append('g')
+					.attr('class','comparison-container')
+					.html( comparisonNodes );
+
+			})
+				// .attr('transform',function(d){
+				// 	return 'translate(' + d.anchor + ')';
+				// })
+				// .attr('xlink:href',d=>d.id)
+
 
 		parent.selectAll('use')
 			.transition()

@@ -1,113 +1,150 @@
 import * as d3 from 'd3';
+import * as axonometric from 'd3-axonometric';
+import { comparison } from './comparison-paths'
 
-var container, maxArea;
-const cubeProjectionHeight = 15;
-const bedReferenceDepth = 2.14;
-const svgOffset = 30;
 
-export function getProjection(area, mA, parent) {
-	setContainer(parent);
-	setRefArea(mA);
 
-	var svg = d3.select(parent).append('svg').attr('class', 'property')
-	var g = svg.append("g").classed('surface-container', true);
-	var refContainer = svg.append("g")
-	.classed("reference", true);
+export function square() {
+	//the bigest square is a square of side max area (mA), this sets the viewbox;
+	var scale = 5; //SVG pixels per meter
+	var maxArea = undefined;
+	var areaAccessor = function(d){ return area; }
+	var projection = axonometric.axonometricProjection()
+		.angle(Math.PI/8);
+	var boundary = axonometric.axonometricBounds()
+		.projection(projection);
 
-	var rect = g.append("rect")
-    .attr("x", 0 )
-    .attr("y", 0 )
-    .attr("data-area", area);
+	var pathGenerator = axonometric.axonometricPath()
+		.projection(projection);
 
-	var outerCube = g.append("g");
-	var cube = outerCube.append("g").classed('cube-edges', true);
+	var lineGenerator = axonometric.axonometricLine()
+		.projection(projection);
 
-	cube.append("rect")
-	.attr("width", cubeProjectionHeight)
-	.attr("height", getSquareSize(area))
-	.classed("dark-face", true)
-	.attr("transform", function(d) {
-	    return "translate(-"+cubeProjectionHeight+","+cubeProjectionHeight+") skewY(-45)"; 
-	});
+	var margin = {top:10,left:10,bottom:10,right:10}
 
-	cube.append("rect")
-	.attr("width", cubeProjectionHeight)
-	.attr("height", getSquareSize(area))
-	.classed("light-face", true)
-	.attr("transform", function(d) {
-	    return "rotate(90) skewY(45)"; 
-	});
 
-	var reference = refContainer.append("use")
-	.attr("xlink:href", "#bedMan")
-	.attr("x", 0)
-	.attr("y", 0)
-	.attr("width", 88)
-	.attr("height", 64);
 
-	window.addEventListener('resize', function(){
-		updateVisualisation(svg, rect, outerCube, refContainer, reference);
-	});//TODO: Weird error on resize up, but not down >> module oFooter Cannot read property 'removeEventListener' of undefined
+	function drawSquare(parent){
+		//work out the viewport required
+		if(maxArea === undefined){ maxArea = d3.max(parent.data(), areaAccessor); }
+		var bounds = boundary( pointsList(squareCoords(maxArea, scale)) );
 
-	updateVisualisation(svg, rect, outerCube, refContainer, reference);
+//		var comparisonNodes = d3.select('symbol#bedMan g').node().innerHTML;
+
+		parent.transition()
+			.attr('viewBox', [bounds.x-5, bounds.y-10, bounds.width+10, bounds.height+20]);
+		
+
+		parent.selectAll('path')
+			.data(function(d){ 
+				return squareCoords( areaAccessor(d), scale ); 
+			})
+			.enter()
+			.append('path')
+				.attr('vector-effect','non-scaling-stroke')
+				.attr('class', function(d){
+					return d.class + ' cuboid-face'; 
+				});
+
+		parent.selectAll('path.cuboid-face')
+			.transition()
+			.attr('d', function(d){
+				return pathGenerator(d.shape) + 'z'; 
+			});
+
+
+
+		parent.selectAll('g.comparison-container')
+			.data(function(d){
+				var coords = squareCoords(areaAccessor(d),scale)[2].shape; //get the top face coords
+				var bedAspect = 0.78;//the 'aspect ratio' of the beds sides
+				var start = [...coords[3]]; //left most position of the square
+				var end = [...start];
+				end[0] += 2.17 * scale;
+				end[1] += bedAspect * scale;
+				var bedBounds = boundary([start, end]);				
+				start[1] = scale*1.4;
+				var anchor = projection(start);
+
+				return [{
+					anchor:anchor,
+					width:bedBounds.width,
+				}];
+			}).enter()
+				.append('g')
+					.attr('class','comparison-container')
+					.attr('transform',function(d){
+						return 'translate(' +d.anchor+ ') scale(3.8)';
+					})
+					.html( comparison );
+
+
+		parent.selectAll('g.comparison-container')
+			.transition()
+			.attr('transform',function(d){
+				return 'translate(' +d.anchor+ ') scale(3.9)';
+			});
+
+
+	}
+
+	drawSquare.areaAccessor = function(x){
+		if(x===undefined) return areaAccessor;
+		areaAccessor = x;
+		return drawSquare;		
+	}
+
+	drawSquare.maxArea = function(x){
+		if(x===undefined) return maxArea;
+		maxArea = x;
+		return drawSquare;
+	}
+
+	drawSquare.scale = function(x){
+		if(x===undefined) return scale;
+		scale = x;
+		return drawSquare;
+	}
+
+	drawSquare.projection = function(){
+		return projection;
+	}
+
+	return drawSquare;
 }
 
-function getSquareSize(area) {
-	var ratio = getContainer().offsetWidth/Math.sqrt(2*getRefArea());
-	return ratio*Math.sqrt(area);
+//from a set of faces return a list of points [[x,y,z],[x,y,z],etc...]
+function pointsList(faces){ 
+	return faces.reduce(function(points,current){
+		return points.concat(current.shape);
+	},[]);
 }
 
-function getSquareDiagonal(squareSide) {
-	return Math.sqrt(2*Math.pow(squareSide, 2));
-}
+function squareCoords(area, scale){
+	if(scale === undefined) scale=1;
+	var sideLength = Math.sqrt(area) * scale;
+	var squareThickness = scale/5 * 3;
+	var topFace = [
+		[-sideLength, squareThickness, -sideLength],
+		[0, squareThickness, -sideLength],
+		[0, squareThickness, 0],
+		[-sideLength, squareThickness, 0] ];
 
-function updateVisualisation(svg, rect, outerCube, refContainer, reference) {
-	var area = rect.attr("data-area");
-	var diagonal = getSquareDiagonal(getSquareSize(getRefArea()));
-	var slider = document.querySelector('.property-value-slider input');
-	var stepNum = .5*(1 + (slider.value - slider.min)/slider.step);
-	var referenceScale = (1/stepNum)*Math.round(getContainer().offsetWidth)/parseInt(getComputedStyle(getContainer(), null).maxWidth);
+	var leftFace = [
+		[-sideLength, squareThickness, 0],
+		[0, squareThickness, 0],
+		[0, 0, 0],
+		[-sideLength, 0, 0] ];
 
-	rect
-	.attr('width', getSquareSize(area))
-	.attr('height', getSquareSize(area)) 
-	.attr("transform", function(d) {
-	    return "translate("+ .5*diagonal +", "+ svgOffset +") rotate(45)"; 
-	});
+	var rightFace = [
+		[0, squareThickness, 0],
+		[0, squareThickness, -sideLength],
+		[0, 0, -sideLength],
+		[0, 0, 0] ];
 
-	var cube = outerCube.select('.cube-edges');
-	cube.attr("transform", "translate("+ (getSquareSize(area) + cubeProjectionHeight) +", 0)");
-
-	outerCube.select('.dark-face').attr("height", getSquareSize(area));
-	outerCube.select('.light-face').attr("height", getSquareSize(area));
-
-	var containerSize = outerCube.select('.cube-edges').node().getBBox();
-	var borderTranslation = [.5*(getSquareDiagonal(containerSize.width) + diagonal) , .5*getSquareDiagonal(containerSize.height)+svgOffset];
-	outerCube.attr("transform", "translate("+ borderTranslation[0] +", "+ borderTranslation[1] +") rotate(135)");
-
-	reference.attr("transform", "scale("+referenceScale+","+referenceScale+")");
-
-	var xPos = .5*(diagonal - getSquareDiagonal(getSquareSize(area))) + svgOffset;
-	var yPos = .5*(cube.node().getBBox().height - svgOffset) - .75*(refContainer.node().getBBox().height);// - refContainer.node().getBBox().height;//.5*(svg.node().getBBox().height + svgOffset) - refContainer.node().getBBox().height + cubeProjectionHeight*referenceScale;
-
-	if(yPos < 0) yPos = 0;
-	refContainer.attr("transform", "translate("+xPos+","+ yPos +") ");
-
-	svg.attr('height', svg.node().getBBox().height + svgOffset);
-}
-
-function getRefArea() {
-	return maxArea;
-}
-
-function setRefArea(mA) {
-	maxArea = mA;
-}
-
-function getContainer() {
-	return container;
-}
-
-function setContainer(element) {
-	container = element;
+	return [ 
+		{'class':'dark-face',shape:leftFace},
+		{'class':'light-face',shape:rightFace},
+		{'class':'top-face', shape:topFace} 
+	];
 }

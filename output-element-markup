@@ -1,0 +1,7 @@
+<p class="property-area">
+    Hong Kong<br>
+    <span class="area">12 sq m</span>
+
+    <svg class="property" height="140.21654510498047"><g class="surface-container"><rect x="0" y="0" data-area="12" width="101.27545102902319" height="101.27545102902319" transform="translate(150.5, 30) rotate(45)"></rect><g transform="translate(232.71916035442507, 112.21916035442509) rotate(135)"><g class="cube-edges" transform="translate(116.27545102902319, 0)"><rect width="15" height="101.27545102902319" class="dark-face" transform="translate(-15,15) skewY(-45)"></rect><rect width="15" height="101.27545102902319" class="light-face" transform="rotate(90) skewY(45)"></rect></g></g></g><g class="reference" transform="translate(108.88744180965159,0) "><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#bedMan" x="0" y="0" width="88" height="64" transform="scale(1.308695652173913,1.308695652173913)"></use></g>
+    </svg>
+</p>

@@ -1,8 +1,6 @@
 import {getSymbolFromCurrency} from 'currency-symbol-map';
 import axios from 'axios';
 
-
-
 const sliderThumbWidth = 28; //this is the value for chrome
 const sliderContainer = document.querySelector('.property-value-slider');
 const slider = document.querySelector('.property-value-slider input');
@@ -35,6 +33,36 @@ export function updateSlider(currency) {
 
 	if(selectedCurrency === 'GBP') updateRangeToNearest500K(1);
 	else translateRange();
+}
+
+export function sliderFactory(){
+	const parentSelector = '.property-value-slider';
+
+
+	let rates;
+	let currency = 'gbp';
+
+	function slider(exchangeRates, parentSelector = '.property-value-slider'){
+		rates = exchangeRates;
+		if(!rates) console.error('ERROR: no exchange rate function found');
+
+		const sliderThumbWidth = 28; //this is the value for chrome
+		const sliderContainer = document.querySelector(parentSelector);
+		const slider = document.querySelector(parentSelector + ' input');
+		const output = document.querySelector(parentSelector + ' output');
+		const valueInput = document.querySelector(parentSelector +' #amountInput');
+		const sliderMin = document.querySelector(parentSelector + ' .slider-range.range-min');
+		const sliderMax = document.querySelector(parentSelector + ' .slider-range.range-max');
+		const propertyFormSubmit = document.querySelector('#propertyCalculator input[type="submit"]');
+
+	}
+
+	slider.currency =  function(x){
+		currency = x;
+		return slider;
+	}
+
+	return slider;
 }
 
 function setOutput(noReload){

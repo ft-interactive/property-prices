@@ -61,7 +61,7 @@ function update(amount, exchangeRate, data, currency){
     .call(squareDrawer);
 
  d3.selectAll('.property-area span.area')
-    .html(function(d){ return ' ' + getArea(d) + ' m<sup>2</sup>' });
+    .html(function(d){ return ' ' + getArea(d) + ' sq m' });
 
   d3.select('h1 span.amount').text(getSymbolFromCurrency(currency) +  slider.translateValue( amount ));
 

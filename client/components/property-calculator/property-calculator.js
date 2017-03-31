@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as d3 from 'd3'; 
+import * as d3 from 'd3';
 import * as projection from './projection';
 import 'awesomplete';
 import * as slider from './sliderUtil';
@@ -47,7 +47,7 @@ function update(amount, exchangeRate, data, currency){
         parent.append('span')
           .attr('class','area')
           .html(function(d){ return ' ' + getArea(d) + ' m<sup>2</sup>' });
-        
+
         parent.append('svg')
           .attr('class','property')
 
@@ -57,10 +57,10 @@ function update(amount, exchangeRate, data, currency){
   //update elements
   d3.selectAll('.property-area svg.property')
     .call(squareDrawer);
-    
+
  d3.selectAll('.property-area span.area')
     .html(function(d){ return ' ' + getArea(d) + ' m<sup>2</sup>' });
-  
+
   d3.select('h1 span.amount').text(getSymbolFromCurrency(currency) +  slider.translateValue( amount ));
 
 }
@@ -87,7 +87,7 @@ function sortPropertiesByLocationAndDate(array) {
     else {
       var nameA=a.city.toLowerCase(), nameB=b.city.toLowerCase()
       if (nameA < nameB)
-        return -1 
+        return -1
       if (nameA > nameB)
         return 1
       return 0;
@@ -127,7 +127,7 @@ function UI(){
 		completeInput.classList.remove('selected');
 	}
 
-	slider.initSlider();
+	slider.initSlider(rates);
 	var trigger = document.querySelector('.currency-button[data-currency="GBP"]');
 	trigger.click();
 }

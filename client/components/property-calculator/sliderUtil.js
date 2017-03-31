@@ -12,8 +12,14 @@ const propertyFormSubmit = document.querySelector('#propertyCalculator input[typ
 
 var selectTimeout;
 var selectedCurrency ='GBP';
+var rates;
 
-export function initSlider(){
+export function initSlider(rateGetter){
+  if(!rateGetter){
+    console.log('no exchange rate getter specified');
+    return;
+  }
+  rates = rateGetter;
 	slider.addEventListener('input', function(){
 		setOutput();
 	});
@@ -30,39 +36,7 @@ export function initSlider(){
 
 export function updateSlider(currency) {
 	selectedCurrency = currency;
-
-	if(selectedCurrency === 'GBP') updateRangeToNearest500K(1);
-	else translateRange();
-}
-
-export function sliderFactory(){
-	const parentSelector = '.property-value-slider';
-
-
-	let rates;
-	let currency = 'gbp';
-
-	function slider(exchangeRates, parentSelector = '.property-value-slider'){
-		rates = exchangeRates;
-		if(!rates) console.error('ERROR: no exchange rate function found');
-
-		const sliderThumbWidth = 28; //this is the value for chrome
-		const sliderContainer = document.querySelector(parentSelector);
-		const slider = document.querySelector(parentSelector + ' input');
-		const output = document.querySelector(parentSelector + ' output');
-		const valueInput = document.querySelector(parentSelector +' #amountInput');
-		const sliderMin = document.querySelector(parentSelector + ' .slider-range.range-min');
-		const sliderMax = document.querySelector(parentSelector + ' .slider-range.range-max');
-		const propertyFormSubmit = document.querySelector('#propertyCalculator input[type="submit"]');
-
-	}
-
-	slider.currency =  function(x){
-		currency = x;
-		return slider;
-	}
-
-	return slider;
+  rates(selectedCurrency, function (error) { console.log(error); }, updateRangeToNearest500K);
 }
 
 function setOutput(noReload){
@@ -83,18 +57,6 @@ function setOutput(noReload){
 			clearTimeout(selectTimeout);
 		}, 500);
 	}
-}
-
-function translateRange(){
-	var endpoint = 'http://markets.ft.com/research/webservices/securities/v1/quotes?symbols=GBP' + getCurrency() +'&source=5d32d7c412';
-
-	axios.get(endpoint)
-		.then(function (response) {
-		updateRangeToNearest500K(response.data.data.items[0].quote.lastPrice);
-		})
-		.catch(function (error) {
-		console.log(error);
-		});
 }
 
 function updateRangeToNearest500K(exchangeRate) {

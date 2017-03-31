@@ -32,7 +32,9 @@ function update(amount, exchangeRate, data, currency){
 //add elements if they don't exist
   d3.select('.output-flexWrapper')
     .selectAll('p.property-area')
-    .data(data, function(d){ return d.city })
+    .data(data.sort(function(a,b){
+        return (b.value - a.value);
+      }), function(d){ return d.city })
       .enter()
     .call(function(wrapper){
       wrapper.append('p')
@@ -46,7 +48,7 @@ function update(amount, exchangeRate, data, currency){
 
         parent.append('span')
           .attr('class','area')
-          .html(function(d){ return ' ' + getArea(d) + ' m<sup>2</sup>' });
+          .html(function(d){ return ' ' + getArea(d) + ' sq m' });
 
         parent.append('svg')
           .attr('class','property')

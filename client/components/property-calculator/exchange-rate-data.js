@@ -21,7 +21,7 @@ export function exchangeRate(){
     }
 
     function marketDataURL(currency){
-       return `http://markets.ft.com/research/webservices/securities/v1/quotes?symbols=usd${currency.toLowerCase()}&source=5d32d7c412`
+       return `https://markets.ft.com/research/webservices/securities/v1/quotes?symbols=usd${currency.toLowerCase()}&source=5d32d7c412`
     }
 
     return rate;

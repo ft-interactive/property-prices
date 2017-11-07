@@ -47,7 +47,7 @@ function setOutput(noReload){
 
 	const xPosition = ((slider.value - slider.min) / (slider.max - slider.min))*(inputRect.width - outputRect.width*.5) - sliderThumbWidth*.5;
 	output.innerHTML =  currencySymbol + translateValue(slider.value * 1000000);
-	output.style = 'left:'+xPosition+'px;';
+	output.style.left = xPosition + 'px';
 
 	valueInput.value = slider.value*1000000;
 

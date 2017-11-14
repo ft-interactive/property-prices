@@ -104,7 +104,7 @@ function UI(){
 	var currency = document.getElementById('currencyInput');
 	var completeInput = document.querySelector('input.awesomplete');
 
-	buttons.forEach(function(button){
+	Array.from(buttons).forEach(function(button){
 		button.addEventListener('click', function(e){
 			e.preventDefault();
 			resetCurrencySelection(button);
@@ -123,7 +123,7 @@ function UI(){
 	});
 
 	function resetCurrencySelection(target) {
-		buttons.forEach(function(button){
+		Array.from(buttons).forEach(function(button){
 			if(button !== target) button.classList.remove('selected');
 		});
 		completeInput.classList.remove('selected');
@@ -142,7 +142,7 @@ function showError() {
   const outputElem = document.querySelectorAll('.property-area');
   const outputContainer = document.querySelector('.output-flexWrapper');
 
-  outputElem.forEach(function(elem){
+  Array.from(outputElem).forEach(function(elem){
     elem.remove();
   });
 
